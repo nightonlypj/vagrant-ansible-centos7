@@ -1,4 +1,6 @@
-# CentOS7 Vagrantfile提供
+# CentOS7 Vagrantfile＋Ansible playbook提供
+
+Amazon Linux(EC2/Lightsail)を使用する場合は、[CentOS6 Vagrantfile＋Ansible playbook提供](../vagrant-ansible-centos6)を使用してください。
 
 ## 前提条件
 
@@ -54,4 +56,6 @@ $ ssh admin@127.0.0.1 -p 2207
 : abc123
 $ su -
 : xyz789
+# cd /vagrant/ansible
+# ansible-playbook playbook.yml -i hosts/development -l development
 ```

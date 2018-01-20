@@ -1,0 +1,6 @@
+- name: newaliases
+  shell: newaliases
+- name: systemctl restart firewalld
+  systemd: name=firewalld state=restarted
+- name: firewall-cmd --reload
+  shell: firewall-cmd --reload

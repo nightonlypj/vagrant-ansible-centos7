@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<zone>
+  <short>Internal</short>
+  <description>For use on internal networks. You mostly trust the other computers on the networks to not harm your computer. Only selected incoming connections are accepted.</description>
+<!-- ### START ### -->
+  <source address="10.0.0.0/8"/>
+  <source address="172.16.0.0/12"/>
+  <source address="192.168.0.0/24"/>
+  <source address="fe80::/10"/>
+<!-- ### END ### -->
+  <service name="ssh"/>
+  <service name="mdns"/>
+  <service name="samba-client"/>
+  <service name="dhcpv6-client"/>
+</zone>

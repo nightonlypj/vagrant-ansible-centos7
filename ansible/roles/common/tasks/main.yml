@@ -1,0 +1,119 @@
+### yum ###
+- name: yum -y groupinstall "Development Tools"
+  yum: name="@Development Tools" state=present
+
+- name: yum -y groupinstall "Base"
+  yum: name="@Base" state=present
+
+- name: yum -y install ftp logwatch nmap-ncat screen telnet
+  yum: name={{ item }} state=present
+  with_items:
+    - ftp
+    - logwatch
+    - nmap-ncat
+    - screen
+    - telnet
+
+- import_tasks: roles/common/tasks/epel.yml
+- name: yum -y --enablerepo=epel install nkf
+  yum: name=nkf state=present enablerepo=epel
+
+### systemctl ###
+- name: systemctl stop abrt-ccpp; systemctl disable abrt-ccpp
+  systemd: name=abrt-ccpp state=stopped enabled=no
+- name: systemctl stop abrt-oops; systemctl disable abrt-oops
+  systemd: name=abrt-oops state=stopped enabled=no
+- name: systemctl stop abrtd; systemctl disable abrtd
+  systemd: name=abrtd state=stopped enabled=no
+- name: systemctl stop atd; systemctl disable atd
+  systemd: name=atd state=stopped enabled=no
+- name: systemctl stop auditd; systemctl disable auditd
+  systemd: name=auditd enabled=no
+  # Tips: state=stopped -> Unable to stop service auditd: Failed to stop auditd.service: Operation refused, unit auditd.service may be requested by dependency only.
+- name: systemctl stop blk-availability; systemctl disable blk-availability
+  systemd: name=blk-availability state=stopped enabled=no
+- name: systemctl stop lvm2-monitor; systemctl disable lvm2-monitor
+  systemd: name=lvm2-monitor state=stopped enabled=no
+- name: systemctl stop mdmonitor; systemctl disable mdmonitor
+  systemd: name=mdmonitor state=stopped enabled=no
+- name: systemctl stop ntpdate; systemctl disable ntpdate
+  systemd: name=ntpdate state=stopped enabled=no
+- name: systemctl stop smartd; systemctl disable smartd
+  systemd: name=smartd state=stopped enabled=no
+
+- name: systemctl start crond; systemctl enable crond
+  systemd: name=crond state=started enabled=yes
+- name: systemctl start irqbalance; systemctl enable irqbalance
+  systemd: name=irqbalance state=started enabled=yes
+- name: systemctl start messagebus; systemctl enable messagebus
+  systemd: name=messagebus state=started enabled=yes
+- name: systemctl start psacct; systemctl enable psacct
+  systemd: name=psacct state=started enabled=yes
+- name: systemctl start rsyslog; systemctl enable rsyslog
+  systemd: name=rsyslog state=started enabled=yes
+- name: systemctl start sysstat; systemctl enable sysstat
+  systemd: name=sysstat state=started enabled=yes
+
+### conf ###
+- name: cd /etc; cp /vagrant/ansible/roles/common/templates/etc/{hosts,hosts.allow,hosts.deny,sysctl.conf,logrotate.conf} ./; chmod 644 {hosts,hosts.allow,hosts.deny,sysctl.conf,logrotate.conf}; chown root:root {hosts,hosts.allow,hosts.deny,sysctl.conf,logrotate.conf}
+  template: src={{ item }} dest="/etc/" mode=644 owner=root group=root backup=yes
+  with_fileglob:
+    - "templates/etc/hosts"
+    - "templates/etc/hosts.allow"
+    - "templates/etc/hosts.deny"
+    - "templates/etc/sysctl.conf"
+    - "templates/etc/logrotate.conf"
+- name: cd /etc; cp /vagrant/ansible/roles/common/templates/etc/sudoers ./; chmod 440 sudoers; chown root:root sudoers
+  template: src="templates/etc/sudoers" dest="/etc/" mode=440 owner=root group=root backup=yes
+
+- name: ln -sfn /usr/share/zoneinfo/{{ localtime }} /etc/localtime
+  file: src="/usr/share/zoneinfo/{{ localtime }}" dest="/etc/localtime" state=link force=yes
+- name: cd /etc; cp /vagrant/ansible/roles/common/templates/etc/vconsole.conf ./; chmod 644 vconsole.conf; chown root:root vconsole.conf
+  copy: src="templates/etc/vconsole.conf" dest="/etc/" mode=644 owner=root group=root backup=yes
+- name: cd /etc/sysconfig; cp /vagrant/ansible/roles/common/templates/etc/sysconfig/init ./; chmod 644 init; chown root:root init
+  template: src="templates/etc/sysconfig/init" dest="/etc/sysconfig/" mode=644 owner=root group=root backup=yes
+- name: cd /etc; cp /vagrant/ansible/roles/common/templates/etc/locale.conf ./; chmod 644 locale.conf; chown root:root init
+  template: src="templates/etc/locale.conf" dest="/etc/" mode=644 owner=root group=root backup=yes
+- name: cd /etc/security; cp /vagrant/ansible/roles/common/templates/etc/security/limits.conf ./; chmod 644 limits.conf; chown root:root limits.conf
+  template: src="templates/etc/security/limits.conf" dest="/etc/security/" mode=644 owner=root group=root backup=yes
+- name: cd /etc/pam.d; cp /vagrant/ansible/roles/common/templates/etc/pam.d/su ./; chmod 644 su; chown root:root su
+  template: src="templates/etc/pam.d/su" dest="/etc/pam.d/" mode=644 owner=root group=root backup=yes
+
+### aliases ###
+- name: cd /etc; cp /vagrant/ansible/roles/common/templates/etc/aliases ./; chmod 644 aliases; chown root:root aliases
+  template: src="templates/etc/aliases" dest="/etc/" mode=644 owner=root group=root backup=yes
+  notify: newaliases
+
+### cron ###
+- when: hosts_env != 'development'
+  name: (!development) crontab <- Rebooted notice
+  cron:
+    name: Rebooted notice
+    special_time: reboot
+    job: (date; echo -e "\n- dmesg -"; dmesg; echo -e "\n- /var/log/messages -"; tail -100 /var/log/messages) | mail -s "Rebooted notice of `hostname`" -r crond warning
+
+### firewalld ###
+- name: cd /etc/firewalld; cp /vagrant/ansible/roles/common/templates/etc/firewalld/{firewalld.conf,lockdown-whitelist.xml} ./; chmod 644 {firewalld.conf,lockdown-whitelist.xml}; chown root:root {firewalld.conf,lockdown-whitelist.xml}
+  template: src={{ item }} dest="/etc/firewalld/" mode=644 owner=root group=root backup=yes
+  with_fileglob:
+    - "templates/etc/firewalld/firewalld.conf"
+    - "templates/etc/firewalld/lockdown-whitelist.xml"
+  notify: systemctl restart firewalld
+- name: cd /etc/firewalld/zones; cp /vagrant/ansible/roles/common/templates/etc/firewalld/zones/*.xml ./; chmod 644 *.xml; chown root:root *.xml
+  template: src={{ item }} dest="/etc/firewalld/zones/" mode=644 owner=root group=root backup=yes
+  with_fileglob:
+    - "templates/etc/firewalld/zones/*"
+  notify: firewall-cmd --reload
+- name: cd /etc/firewalld/services; cp /vagrant/ansible/roles/common/templates/etc/firewalld/services/*.xml ./; chmod 644 *.xml; chown root:root *.xml
+  template: src={{ item }} dest="/etc/firewalld/services/" mode=644 owner=root group=root backup=yes
+  with_fileglob:
+    - "templates/etc/firewalld/services/*"
+  notify: firewall-cmd --reload
+- name: cd /etc/firewalld/icmptypes; cp /vagrant/ansible/roles/common/templates/etc/firewalld/icmptypes/*.xml ./; chmod 644 *.xml; chown root:root *.xml
+  template: src={{ item }} dest="/etc/firewalld/icmptypes/" mode=644 owner=root group=root backup=yes
+  with_fileglob:
+    - "templates/etc/firewalld/icmptypes/*"
+  notify: firewall-cmd --reload
+
+- name: systemctl start firewalld; systemctl enable firewalld
+  systemd: name=firewalld state=started enabled=yes
