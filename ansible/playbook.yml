@@ -5,3 +5,12 @@
   roles:
     - role: common
       tags: common
+    # Use chronyd(default ntp client)
+    - role: chronyd
+      tags: chronyd
+    # Use Postfix(localhost only)
+    - role: postfix
+      tags: postfix
+    # Use sshd
+    - role: sshd
+      tags: sshd

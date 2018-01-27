@@ -1,0 +1,2 @@
+- name: systemctl restart chronyd
+  systemd: name=chronyd state=restarted

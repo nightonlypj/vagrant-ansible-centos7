@@ -1,0 +1,2 @@
+- name: systemctl restart postfix
+  systemd: name=postfix state=restarted

@@ -1,0 +1,8 @@
+### conf ###
+- name: cd /etc; cp /vagrant/ansible/roles/chronyd/templates/etc/chrony.conf ./; chmod 644 chrony.conf; chown root:root chrony.conf
+  template: src="templates/etc/chrony.conf" dest="/etc/" mode=644 owner=root group=root backup=yes
+  notify: systemctl restart chronyd
+
+### start ###
+- name: systemctl start chronyd; systemctl enable chronyd
+  systemd: name=chronyd state=started enabled=yes

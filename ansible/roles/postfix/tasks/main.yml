@@ -1,0 +1,10 @@
+### conf ###
+- name: cd /etc/postfix; cp /vagrant/ansible/roles/postfix/templates/etc/postfix/main.cf ./; chmod 644 main.cf; chown root:root main.cf
+  template: src="templates/etc/postfix/main.cf" dest="/etc/postfix/" mode=644 owner=root group=root backup=yes
+  notify: systemctl restart postfix
+- name: postfix check
+  shell: postfix check
+
+### start ###
+- name: systemctl start postfix; systemctl enable postfix
+  systemd: name=postfix state=started enabled=yes
