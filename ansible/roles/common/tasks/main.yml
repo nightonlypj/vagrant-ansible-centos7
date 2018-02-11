@@ -102,17 +102,17 @@
 - name: cd /etc/firewalld/zones; cp /vagrant/ansible/roles/common/templates/etc/firewalld/zones/*.xml ./; chmod 644 *.xml; chown root:root *.xml
   template: src={{ item }} dest="/etc/firewalld/zones/" mode=644 owner=root group=root backup=yes
   with_fileglob:
-    - "templates/etc/firewalld/zones/*"
+    - "templates/etc/firewalld/zones/*.xml"
   notify: firewall-cmd --reload
 - name: cd /etc/firewalld/services; cp /vagrant/ansible/roles/common/templates/etc/firewalld/services/*.xml ./; chmod 644 *.xml; chown root:root *.xml
   template: src={{ item }} dest="/etc/firewalld/services/" mode=644 owner=root group=root backup=yes
   with_fileglob:
-    - "templates/etc/firewalld/services/*"
+    - "templates/etc/firewalld/services/*.xml"
   notify: firewall-cmd --reload
 - name: cd /etc/firewalld/icmptypes; cp /vagrant/ansible/roles/common/templates/etc/firewalld/icmptypes/*.xml ./; chmod 644 *.xml; chown root:root *.xml
   template: src={{ item }} dest="/etc/firewalld/icmptypes/" mode=644 owner=root group=root backup=yes
   with_fileglob:
-    - "templates/etc/firewalld/icmptypes/*"
+    - "templates/etc/firewalld/icmptypes/*.xml"
   notify: firewall-cmd --reload
 
 - name: systemctl start firewalld; systemctl enable firewalld

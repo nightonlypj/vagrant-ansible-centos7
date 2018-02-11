@@ -1,0 +1,2 @@
+- name: systemctl restart httpd
+  systemd: name=httpd state=restarted
