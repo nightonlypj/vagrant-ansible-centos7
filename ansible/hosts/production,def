@@ -26,10 +26,7 @@ aliases_warning=admin@mydomain
 aliases_critical=admin@mydomain
 ### chronyd ###
 # Use CentOS default
-chronyd_server1=0.centos.pool.ntp.org
-chronyd_server2=1.centos.pool.ntp.org
-chronyd_server3=2.centos.pool.ntp.org
-chronyd_server4=3.centos.pool.ntp.org
+chronyd_servers='["0.centos.pool.ntp.org", "1.centos.pool.ntp.org", "2.centos.pool.ntp.org", "3.centos.pool.ntp.org"]'
 ### END ###
 
 [web-servers:vars]
