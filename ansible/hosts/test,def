@@ -1,6 +1,9 @@
 [test]
 test.mydomain
 
+[db-servers:children]
+test
+
 [web-servers:children]
 test
 
@@ -9,6 +12,10 @@ ansible_ssh_port=22
 #ansible_ssh_user=ansible
 hosts_env=test
 hosts_allow_sshd=x.x.x.x
+hosts_allow_httpd=ALL
+firewalld_enable_http=1
+hosts_allow_mysqld=x.x.x.x
+firewalld_enable_mysqld=1
 ### system ###
 localtime=Japan
 vconsole_keymap=jp106
@@ -22,12 +29,21 @@ aliases_critical=admin@mydomain
 chronyd_servers='["0.centos.pool.ntp.org", "1.centos.pool.ntp.org", "2.centos.pool.ntp.org", "3.centos.pool.ntp.org"]'
 ### END ###
 
+[db-servers:vars]
+### MariaDB ###
+mysql_root_password=xyz789
+mysql_dbname=mytest
+mysql_username=myuser
+mysql_password=abc123
+### END ###
+
 [web-servers:vars]
-hosts_allow_httpd=ALL
-firewalld_enable_http=1
 ### Apache ###
-httpd_enable_ip_limit=1
 httpd_front_servername=test.mydomain
+# No use IP limit
+#httpd_enable_ip_limit=0
+# Use IP limit
+httpd_enable_ip_limit=1
 ### Load Balancer ###
 # No use
 httpd_ssl_is_80port=0
@@ -50,3 +66,4 @@ httpd_enable_letsencrypt=1
 httpd_front_crt_file=/etc/letsencrypt/live/{{ httpd_front_servername }}/cert.pem
 httpd_front_key_file=/etc/letsencrypt/live/{{ httpd_front_servername }}/privkey.pem
 httpd_front_chain_file=/etc/letsencrypt/live/{{ httpd_front_servername }}/chain.pem
+### END ###

@@ -12,4 +12,9 @@
   <service name="mdns"/>
   <service name="samba-client"/>
   <service name="dhcpv6-client"/>
+<!-- ### START ### -->
+{% if firewalld_enable_mysqld != 0 %}
+  <service name="mysql"/>
+{% endif %}
+<!-- ### END ### -->
 </zone>
