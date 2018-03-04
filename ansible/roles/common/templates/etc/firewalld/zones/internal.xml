@@ -16,5 +16,8 @@
 {% if firewalld_enable_mysqld != 0 %}
   <service name="mysql"/>
 {% endif %}
+{% if firewalld_enable_postgresql != 0 %}
+  <service name="postgresql"/>
+{% endif %}
 <!-- ### END ### -->
 </zone>
