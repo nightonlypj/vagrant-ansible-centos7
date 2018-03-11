@@ -2,22 +2,27 @@
 <zone>
   <short>Internal</short>
   <description>For use on internal networks. You mostly trust the other computers on the networks to not harm your computer. Only selected incoming connections are accepted.</description>
-<!-- ### START ### -->
-  <source address="10.0.0.0/8"/>
-  <source address="172.16.0.0/12"/>
-  <source address="192.168.0.0/24"/>
-  <source address="fe80::/10"/>
+  <!-- ### START ### -->
+{% set addresses = firewalld_internal_addresses | from_json %}
+{% for address in addresses %}
+{% if address != '' %}
+  <source address="{{ address }}"/>
+{% endif %}
+{% endfor %}
 <!-- ### END ### -->
   <service name="ssh"/>
   <service name="mdns"/>
   <service name="samba-client"/>
   <service name="dhcpv6-client"/>
 <!-- ### START ### -->
-{% if firewalld_enable_mysqld != 0 %}
+{% if firewalld_enable_mysqld_internal != 0 %}
   <service name="mysql"/>
 {% endif %}
-{% if firewalld_enable_postgresql != 0 %}
+{% if firewalld_enable_postgresql_internal != 0 %}
   <service name="postgresql"/>
+{% endif %}
+{% if firewalld_enable_redis_internal != 0 %}
+  <service name="redis"/>
 {% endif %}
 <!-- ### END ### -->
 </zone>

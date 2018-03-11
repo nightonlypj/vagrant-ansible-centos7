@@ -1,0 +1,2 @@
+- name: systemctl restart redis
+  systemd: name=redis state=restarted
