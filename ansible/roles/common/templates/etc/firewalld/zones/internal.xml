@@ -24,5 +24,8 @@
 {% if firewalld_enable_redis_internal != 0 %}
   <service name="redis"/>
 {% endif %}
+{% if firewalld_enable_mongodb_internal != 0 %}
+  <service name="mongodb"/>
+{% endif %}
 <!-- ### END ### -->
 </zone>

@@ -45,6 +45,7 @@ firewalld_enable_http_public=0
 firewalld_enable_mysqld_internal=1
 firewalld_enable_postgresql_internal=1
 firewalld_enable_redis_internal=1
+firewalld_enable_mongodb_internal=1
 ### MariaDB ###
 mysql_root_password=xyz789
 mysql_dbname=mytest
@@ -65,6 +66,7 @@ firewalld_enable_http_public=1
 firewalld_enable_mysqld_internal=0
 firewalld_enable_postgresql_internal=0
 firewalld_enable_redis_internal=0
+firewalld_enable_mongodb_internal=0
 ### Apache ###
 httpd_front_servername=mydomain
 # No use IP limit

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ### START ### -->
+<service>
+  <short>MongoDB</short>
+  <description>MongoDB NoSQL Database Server</description>
+  <port protocol="tcp" port="27017"/>
+</service>
+<!-- ### END ### -->

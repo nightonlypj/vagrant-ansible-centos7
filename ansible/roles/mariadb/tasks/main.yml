@@ -29,8 +29,11 @@
   name: (development) cd /var/log/mariadb; touch general.log; chmod 644 general.log; chown mysql:mysql general.log
   file: path="/var/log/mariadb/general.log" state=touch mode=644 owner=mysql group=mysql
 
-- name: cd /etc/logrotate.d; cp /vagrant/ansible/roles/mariadb/templates/etc/logrotate.d/mariadb ./; chmod 644 mariadb; chown root:root mariadb
-  template: src="templates/etc/logrotate.d/mariadb" dest="/etc/logrotate.d/" mode=644 owner=root group=root backup=no
+- name: cd /etc/logrotate.d; cp /vagrant/ansible/roles/mariadb/templates/etc/logrotate.d/{mariadb,mysql} ./; chmod 644 {mariadb,mysql}; chown root:root {mariadb,mysql}
+  template: src={{ item }} dest="/etc/logrotate.d/" mode=644 owner=root group=root backup=no
+  with_fileglob:
+    - "templates/etc/logrotate.d/mariadb"
+    - "templates/etc/logrotate.d/mysql"
 - name: cd /root; cp /vagrant/ansible/roles/mariadb/templates/root/.my.cnf ./; chmod 600 .my.cnf; chown root:root .my.cnf
   template: src="templates/root/.my.cnf" dest="/root/" mode=600 owner=root group=root backup=yes
 

@@ -20,6 +20,7 @@ firewalld_enable_http_public=1
 firewalld_enable_mysqld_internal=1
 firewalld_enable_postgresql_internal=1
 firewalld_enable_redis_internal=1
+firewalld_enable_mongodb_internal=1
 ### system ###
 localtime=Japan
 vconsole_keymap=jp106
