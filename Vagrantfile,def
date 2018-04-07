@@ -46,6 +46,8 @@ Vagrant.configure("2") do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
 ### START ###
+  config.vbguest.auto_update = false
+  config.vbguest.no_remote = true
   config.vm.synced_folder ".", "/vagrant", mount_options: ['dmode=777', 'fmode=777']
 ### END ###
 
