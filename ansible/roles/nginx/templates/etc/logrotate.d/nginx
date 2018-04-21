@@ -1,0 +1,21 @@
+/var/log/nginx/*log {
+    create 0644 nginx nginx
+    daily
+### START ###
+#    rotate 10
+{% if hosts_env == 'development' or hosts_env == 'test' %}
+        rotate 7
+{% else %}
+        rotate 90
+{% endif %}
+### END ###
+    missingok
+    notifempty
+### START ###
+#    compress
+### END ###
+    sharedscripts
+    postrotate
+        /bin/kill -USR1 `cat /run/nginx.pid 2>/dev/null` 2>/dev/null || true
+    endscript
+}
