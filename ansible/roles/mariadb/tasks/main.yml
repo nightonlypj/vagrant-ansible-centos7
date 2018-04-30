@@ -28,17 +28,11 @@
 - when: hosts_env == 'development'
   name: (development) cd /var/log/mariadb; touch general.log; chmod 644 general.log; chown mysql:mysql general.log
   file: path="/var/log/mariadb/general.log" state=touch mode=644 owner=mysql group=mysql
-
-- name: cd /etc/logrotate.d; cp /vagrant/ansible/roles/mariadb/templates/etc/logrotate.d/{mariadb,mysql} ./; chmod 644 {mariadb,mysql}; chown root:root {mariadb,mysql}
-  template: src={{ item }} dest="/etc/logrotate.d/" mode=644 owner=root group=root backup=no
-  with_fileglob:
-    - "templates/etc/logrotate.d/mariadb"
-    - "templates/etc/logrotate.d/mysql"
-- name: cd /root; cp /vagrant/ansible/roles/mariadb/templates/root/.my.cnf ./; chmod 600 .my.cnf; chown root:root .my.cnf
-  template: src="templates/root/.my.cnf" dest="/root/" mode=600 owner=root group=root backup=yes
-
 - name: ln -s /var/log/mariadb /var/log/mysql
   file: src="/var/log/mariadb" dest="/var/log/mysql" state=link
+
+- name: cd /etc/logrotate.d; cp /vagrant/ansible/roles/mariadb/templates/etc/logrotate.d/mariadb ./; chmod 644 mariadb; chown root:root mariadb
+  template: src="templates/etc/logrotate.d/mariadb" dest="/etc/logrotate.d/" mode=644 owner=root group=root backup=no
 
 ### backup ###
 - name: mkdir -p /var/backup/mysqldump; chmod 750 /var/backup/{.,mysqldump}; chown root:wheel /var/backup/{.,mysqldump}
@@ -56,16 +50,19 @@
   systemd: name=mariadb state=started enabled=yes
 
 ### root password ###
-- name: mysql> UPDATE mysql.user SET password=PASSWORD('{{ mysql_root_password }}') WHERE User = 'root' AND Host = 'localhost';
+- name: test ! -e /root/.my.cnf
+  stat: path=/root/.my.cnf
+  register: f
+- when: not f.stat.exists
+  name: (first) mysql> UPDATE mysql.user SET password=PASSWORD('{{ mysql_root_password }}') WHERE User = 'root' AND Host = 'localhost';
   mysql_user:
     name: root
     host: localhost
     password: "{{ mysql_root_password }}"
     login_user: ''
     login_password: ''
-  ignore_errors: yes
-
-- name: mysql> UPDATE mysql.user SET password=PASSWORD('{{ mysql_root_password }}') WHERE User = 'root';
+- when: not f.stat.exists
+  name: (first) mysql> UPDATE mysql.user SET password=PASSWORD('{{ mysql_root_password }}') WHERE User = 'root';
   mysql_user:
     name: root
     host: "{{ item }}"
@@ -76,6 +73,9 @@
     - "{{ ansible_fqdn }}"
     - 127.0.0.1
     - ::1
+- when: not f.stat.exists
+  name: (first) cd /root; cp /vagrant/ansible/roles/mariadb/templates/root/.my.cnf ./; chmod 600 .my.cnf; chown root:root .my.cnf
+  template: src="templates/root/.my.cnf" dest="/root/" mode=600 owner=root group=root backup=yes
 
 ### delete anonymous/fqdn ###
 - name: mysql> DELETE FROM user WHERE User = '';
@@ -85,7 +85,6 @@
     state: absent
     login_user: root
     login_password: "{{ mysql_root_password }}" 
-
 - name: mysql> DELETE FROM user WHERE User = 'root' AND Host = '{{ ansible_fqdn }}';
   mysql_user:
     name: 'root'
@@ -103,13 +102,11 @@
     login_password: "{{ mysql_root_password }}" 
 
 ### create database/user ###
-- name: mysql> CREATE DATABASE {{ mysql_dbname }} CHARACTER SET utf8;
+- name: mysql> CREATE DATABASE {{ mysql_dbname }};
   mysql_db:
     name: "{{ mysql_dbname }}"
-    encoding: utf8
     login_user: root
     login_password: "{{ mysql_root_password }}" 
-
 - name: mysql> CREATE USER '{{ mysql_username }}'@'%' IDENTIFIED BY '{{ mysql_password }}'; GRANT ALL PRIVILEGES ON {{ mysql_dbname }}.* TO '{{ mysql_username }}'@'%';
   mysql_user:
     name: "{{ mysql_username }}"

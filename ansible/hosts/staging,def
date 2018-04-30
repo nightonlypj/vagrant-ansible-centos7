@@ -46,11 +46,13 @@ firewalld_enable_mysqld_internal=1
 firewalld_enable_postgresql_internal=1
 firewalld_enable_redis_internal=1
 firewalld_enable_mongodb_internal=1
-### MariaDB ###
-mysql_root_password=xyz789
+### MySQL/MariaDB ###
+mysql_root_password=changepasswd
 mysql_dbname=mytest
 mysql_username=myuser
-mysql_password=abc123
+mysql_password=changepasswd
+mysql_validate_password_policy=LOW
+mysql_validate_password_length=6
 ### PostgreSQL ###
 postgresql_dbname=pgtest
 postgresql_username=pguser

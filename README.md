@@ -30,6 +30,7 @@ ansible
         postfix         ：Postfix(localhost only)の設定
         sshd            ；sshdの設定
         mariadb         ；MariaDB(MySQL derived)の設定
+        mysql57         ：MySQL 5.7の設定
         postgresql      ：PostgreSQLの設定
         redis           ：Redisの設定
         mongodb         ：MongoDBの設定
