@@ -1,33 +1,37 @@
 ### yum ###
-- name: yum -y install postgresql postgresql-server postgresql-devel postgresql-contrib python-psycopg2
-  yum: name={{ item }} state=present
+- import_tasks: repos.yml
+- name: yum -y --enablerepo=pgdg96 install postgresql96 postgresql96-server postgresql96-devel postgresql96-contrib python-psycopg2
+  yum: name={{ item }} state=present enablerepo=pgdg96
   with_items:
-    - postgresql
-    - postgresql-server
-    - postgresql-devel
-    - postgresql-contrib
+    - postgresql96
+    - postgresql96-server
+    - postgresql96-devel
+    - postgresql96-contrib
     - python-psycopg2
 
+- name: ln -s /usr/pgsql-9.6/bin/pg_config /usr/bin/pg_config
+  file: src="/usr/pgsql-9.6/bin/pg_config" dest="/usr/bin/pg_config" state=link
+
 ### init ###
-- name: test ! -e /var/lib/pgsql/data/postgresql.conf
-  stat: path=/var/lib/pgsql/data/postgresql.conf
+- name: test ! -e /var/lib/pgsql/9.6/data/postgresql.conf
+  stat: path=/var/lib/pgsql/9.6/data/postgresql.conf
   register: f
 - when: not f.stat.exists
-  name: (first) postgresql-setup initdb
-  shell: postgresql-setup initdb
+  name: (first) /usr/pgsql-9.6/bin/postgresql96-setup initdb
+  shell: /usr/pgsql-9.6/bin/postgresql96-setup initdb
 
 ### conf ###
-- name: cd /var/lib/pgsql/data; cp /vagrant/ansible/roles/postgresql/templates/var/lib/pgsql/data/*.conf ./; chmod 600 *.conf; chown postgres:postgres *.conf
-  template: src={{ item }} dest="/var/lib/pgsql/data/" mode=600 owner=postgres group=postgres backup=yes
+- name: cd /var/lib/pgsql/9.6/data; cp /vagrant/ansible/roles/postgresql96/templates/var/lib/pgsql/9.6/data/*.conf ./; chmod 600 *.conf; chown postgres:postgres *.conf
+  template: src={{ item }} dest="/var/lib/pgsql/9.6/data/" mode=600 owner=postgres group=postgres backup=yes
   with_fileglob:
-    - "templates/var/lib/pgsql/data/*.conf"
-  notify: systemctl restart postgresql
+    - "templates/var/lib/pgsql/9.6/data/*.conf"
+  notify: systemctl restart postgresql-9.6
 
 ### log ###
 - name: cd /var/log; mkdir -p pgsql; chmod 750 pgsql; chown postgres:wheel pgsql
   file: path="/var/log/pgsql" state=directory mode=750 owner=postgres group=wheel
-- name: ln -sfn /var/log/pgsql /var/lib/pgsql/data/pg_log
-  file: src="/var/log/pgsql" dest="/var/lib/pgsql/data/pg_log" state=link force=yes
+- name: ln -sfn /var/log/pgsql /var/lib/pgsql/9.6/data/pg_log
+  file: src="/var/log/pgsql" dest="/var/lib/pgsql/9.6/data/pg_log" state=link force=yes
 
 - name: cd /etc/cron.daily; cp /vagrant/ansible/roles/postgresql/templates/etc/cron.daily/logcompress_postgresql.cron ./; chmod 740 logcompress_postgresql.cron; chown root:wheel logcompress_postgresql.cron
   template: src="templates/etc/cron.daily/logcompress_postgresql.cron" dest="/etc/cron.daily/" mode=740 owner=root group=wheel backup=no
@@ -46,8 +50,8 @@
   template: src="templates/etc/logrotate.d/backup_postgresql" dest="/etc/logrotate.d/" mode=644 owner=root group=root backup=no
 
 ### start ###
-- name: systemctl start postgresql; systemctl enable postgresql
-  systemd: name=postgresql state=started enabled=yes
+- name: systemctl start postgresql-9.6; systemctl enable postgresql-9.6
+  systemd: name=postgresql-9.6 state=started enabled=yes
 
 ### create database/user ###
 - name: sudo -u postgres createdb {{ postgresql_dbname }}
