@@ -1,27 +1,15 @@
 ### START ###
 /var/log/mongodb/*.log {
-#       weekly
-        daily
-#       rotate 10
+	daily
 {% if hosts_env == 'development' %}
-        rotate 7
+	rotate 7
 {% else %}
-        rotate 30
+	rotate 30
 {% endif %}
-### END ###
-       copytruncate
-### START ###
-#       delaycompress
-#       compress
-### END ###
-       notifempty
-       missingok
-       postrotate
-          if /bin/kill -USR1 `cat /var/run/mongodb/mongod.pid 2>/dev/null` 2> /dev/null; then
-            sleep 2
-            rm -f $(ls /var/log/mongodb/*.log.$(date +%Y-%m-%dT%H-)* 2>/dev/null | sort | tail -n 1) || true
-          else
-            rm -f /var/log/mongodb/*.log
-          fi
-       endscript
+	missingok
+	notifempty
+	postrotate
+		/bin/kill -SIGUSR1 `cat /var/run/mongodb/mongod.pid 2>/dev/null` 2>/dev/null|| true
+	endscript
 }
+### END ###
