@@ -65,11 +65,16 @@ hosts_allow_mysqld=
 hosts_allow_postgresql=
 firewalld_internal_addresses='["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fe80::/10"]'
 firewalld_enable_http_public=1
+firewalld_enable_tomcat_internal=0
 firewalld_enable_mysqld_internal=0
 firewalld_enable_postgresql_internal=0
 firewalld_enable_redis_internal=0
 firewalld_enable_mongodb_internal=0
-### Apache ###
+### Tomcat ###
+tomcat_enable_manager=0
+tomcat_user_name=
+tomcat_user_password=
+### Apache/Nginx ###
 httpd_front_servername=staging.mydomain
 # No use IP limit
 httpd_enable_ip_limit=0

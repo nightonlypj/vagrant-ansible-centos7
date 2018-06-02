@@ -36,6 +36,8 @@ ansible
         redis           ：Redisの設定
         mongodb         ：MongoDBの設定
         imagick         ：ImageMagickの設定
+        java18          ：Java 1.8の設定
+        tomcat          ：Tomcatの設定
         letsencrypt     ：Let's Encryptの設定　※自動更新対応
         httpd           ：Apacheの設定　※Load Balancer対応
         php-httpd       ：PHP for Apacheの設定

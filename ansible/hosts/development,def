@@ -17,6 +17,7 @@ hosts_allow_mysqld={{ hosts_allow_sshd }}
 hosts_allow_postgresql={{ hosts_allow_sshd }}
 firewalld_internal_addresses='["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fe80::/10"]'
 firewalld_enable_http_public=1
+firewalld_enable_tomcat_internal=1
 firewalld_enable_mysqld_internal=1
 firewalld_enable_postgresql_internal=1
 firewalld_enable_redis_internal=1
@@ -49,7 +50,11 @@ postgresql_password=abc123
 ### END ###
 
 [web-servers:vars]
-### Apache ###
+### Tomcat ###
+tomcat_enable_manager=1
+tomcat_user_name=admin
+tomcat_user_password=xyz789
+### Apache/Nginx ###
 httpd_front_servername=dev-centos6.local
 # No use IP limit
 httpd_enable_ip_limit=0

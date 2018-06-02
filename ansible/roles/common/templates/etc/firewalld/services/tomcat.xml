@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ### START ### -->
+<service>
+  <short>Tomcat</short>
+  <description>Apache Tomcat</description>
+  <port protocol="tcp" port="8080"/>
+</service>
+<!-- ### END ### -->
