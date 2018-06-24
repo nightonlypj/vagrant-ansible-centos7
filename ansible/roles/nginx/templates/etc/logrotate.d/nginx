@@ -10,8 +10,8 @@
 {% endif %}
 ### END ###
     missingok
-    notifempty
 ### START ###
+#    notifempty
 #    compress
 ### END ###
     sharedscripts

@@ -9,8 +9,8 @@
     - postgresql96-contrib
     - python-psycopg2
 
-- name: ln -s /usr/pgsql-9.6/bin/pg_config /usr/bin/pg_config
-  file: src="/usr/pgsql-9.6/bin/pg_config" dest="/usr/bin/pg_config" state=link
+- name: ln -sfn /usr/pgsql-9.6/bin/pg_config /usr/bin/pg_config
+  file: src="/usr/pgsql-9.6/bin/pg_config" dest="/usr/bin/pg_config" state=link force=yes
 
 ### init ###
 - name: test ! -e /var/lib/pgsql/9.6/data/postgresql.conf

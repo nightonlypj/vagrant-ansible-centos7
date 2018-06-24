@@ -5,9 +5,10 @@
 - name: yum -y groupinstall "Base"
   yum: name="@Base" state=present
 
-- name: yum -y install ftp logwatch nmap-ncat psmisc screen telnet
+- name: yum -y install firewalld ftp logwatch nmap-ncat psmisc screen telnet
   yum: name={{ item }} state=present
   with_items:
+    - firewalld
     - ftp
     - logwatch
     - nmap-ncat
