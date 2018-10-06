@@ -1,0 +1,50 @@
+### yum ###
+- import_tasks: roles/common/tasks/remi.yml
+- name: yum -y --enablerepo=remi-php72,remi-safe,epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pecl-mcrypt php-pdo php-pear php-xml php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
+  yum: name={{ item }} state=present enablerepo=remi-php72,remi-safe,epel
+  with_items:
+    - php
+    - php-devel
+    - php-gd
+    - php-gmp
+    - php-intl
+    - php-mbstring
+    - php-pecl-mcrypt
+    - php-pdo
+    - php-pear
+    - php-xml
+    # Use ImageMagick
+    - php-pecl-imagick
+    # Use MariaDB or MySQL
+    - php-mysqlnd
+    # Use PostgreSQL
+    - php-pgsql
+    # Use Redis
+    - php-pecl-redis
+    # Use MongoDB
+    - php-mongodb
+  notify: systemctl restart httpd
+
+### html ###  *** Tips: What you set with Apache will return when installing PHP
+- name: cd /var/www; chmod 771 html; chown apache:wheel html
+  file: path="/var/www/html" state=directory mode=771 owner=apache group=wheel
+
+### conf ###
+- name: cd /etc; cp /vagrant/ansible/roles/php72-httpd/templates/etc/php.ini ./; chmod 644 php.ini; chown root:root php.ini
+  template: src="templates/etc/php.ini" dest="/etc/" mode=644 owner=root group=root backup=yes
+  notify: systemctl restart httpd
+- name: cd /etc/php.d; cp /vagrant/ansible/roles/php72-httpd/templates/etc/php.d/* ./; chmod 644 *; chown root:root *
+  template: src={{ item }} dest="/etc/php.d/" mode=644 owner=root group=root backup=yes
+  with_fileglob:
+    - "templates/etc/php.d/*"
+  notify: systemctl restart httpd
+
+- name: cd /var/lib/php; mkdir -p {session,wsdlcache}; chmod 770 {session,wsdlcache}; chown root:apache {session,wsdlcache}
+  file: path={{ item }} state=directory mode=770 owner=root group=apache
+  with_items:
+    - "/var/lib/php/session"
+    - "/var/lib/php/wsdlcache"
+
+### check ###
+- name: apachectl configtest
+  shell: apachectl configtest

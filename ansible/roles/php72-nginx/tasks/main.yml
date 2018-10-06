@@ -1,6 +1,6 @@
 ### yum ###
 - import_tasks: roles/common/tasks/remi.yml
-- name: yum -y --enablerepo=remi-php72,remi-safe,epel install php php-devel php-gd php-gmp php-intl php-mbstring php-mcrypt php-pdo php-pear php-xml php-fpm php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
+- name: yum -y --enablerepo=remi-php72,remi-safe,epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pecl-mcrypt php-pdo php-pear php-xml php-fpm php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
   yum: name={{ item }} state=present enablerepo=remi-php72,remi-safe,epel
   with_items:
     - php
@@ -9,7 +9,7 @@
     - php-gmp
     - php-intl
     - php-mbstring
-    - php-mcrypt
+    - php-pecl-mcrypt
     - php-pdo
     - php-pear
     - php-xml

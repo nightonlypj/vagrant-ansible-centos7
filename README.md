@@ -43,6 +43,7 @@ ansible
         letsencrypt     ：Let's Encryptの設定　※自動更新対応
         httpd           ：Apacheの設定　※Load Balancer対応
         php-httpd       ：PHP for Apacheの設定
+        php72-httpd     ：PHP 7.2 for Apacheの設定
         nginx           ：Nginxの設定　※Load Balancer対応
         php-nginx       ：PHP for Nginxの設定(PHP-FPM)
         php72-nginx     ：PHP 7.2 for Nginxの設定(PHP-FPM)
@@ -208,8 +209,8 @@ $ exit
 ```
 # mv /etc/letsencrypt /etc/letsencrypt,`date +"%Y%m%d%H%M%S"`
 # cd /usr/bin
-# curl https://dl.eff.org/certbot-auto -o certbot-auto
-# chmod 755 /usr/bin/certbot-auto
+# curl http://dl.eff.org/certbot-auto -o certbot-auto
+# chmod 755 certbot-auto
 # unset PYTHON_INSTALL_LAYOUT
 # certbot-auto certonly --webroot -w /var/www/html -d test.mydomain --email admin@mydomain --agree-tos --debug
 Is this ok [y/d/N]: y

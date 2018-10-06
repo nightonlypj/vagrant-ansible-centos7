@@ -60,6 +60,9 @@
     # Use PHP for Apache  *** Tips: It is better to delete unnecessary [ImageMagick,MariaDB/MySQL,PostgreSQL,Redis,MongoDB] from [roles/php-httpd/tasks/main.yml]
     - role: php-httpd
       tags: php-httpd
+    # Use PHP 7.2 for Apache  *** Tips: It is better to delete unnecessary [ImageMagick,MariaDB/MySQL,PostgreSQL,Redis,MongoDB] from [roles/php-httpd/tasks/main.yml]
+#    - role: php72-httpd
+#      tags: php72-httpd
    # Use Nginx
 #    - role: nginx
 #      tags: nginx

@@ -71,7 +71,7 @@
 - name: ln -sfn /usr/share/zoneinfo/{{ localtime }} /etc/localtime
   file: src="/usr/share/zoneinfo/{{ localtime }}" dest="/etc/localtime" state=link force=yes
 - name: cd /etc; cp /vagrant/ansible/roles/common/templates/etc/vconsole.conf ./; chmod 644 vconsole.conf; chown root:root vconsole.conf
-  copy: src="templates/etc/vconsole.conf" dest="/etc/" mode=644 owner=root group=root backup=yes
+  template: src="templates/etc/vconsole.conf" dest="/etc/" mode=644 owner=root group=root backup=yes
 - name: cd /etc/sysconfig; cp /vagrant/ansible/roles/common/templates/etc/sysconfig/init ./; chmod 644 init; chown root:root init
   template: src="templates/etc/sysconfig/init" dest="/etc/sysconfig/" mode=644 owner=root group=root backup=yes
 - name: cd /etc; cp /vagrant/ansible/roles/common/templates/etc/locale.conf ./; chmod 644 locale.conf; chown root:root init
