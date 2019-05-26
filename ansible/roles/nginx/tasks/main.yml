@@ -11,6 +11,14 @@
 - name: yum -y install mod_ssl
   yum: name=mod_ssl state=present
 
+### ssl ###
+- when: ansible_distribution == 'Amazon'
+  name: (Amazon) cd /etc/pki/tls/certs; cp /vagrant/ansible/roles/httpd/templates/etc/pki/tls/certs/localhost.crt ./; chmod 600 localhost.crt; chown root:root localhost.crt
+  template: src="templates/etc/pki/tls/certs/localhost.crt" dest="/etc/pki/tls/certs/" mode=600 owner=root group=root force=no
+- when: ansible_distribution == 'Amazon'
+  name: (Amazon) cd /etc/pki/tls/private; cp /vagrant/ansible/roles/httpd/templates/etc/pki/tls/private/localhost.key ./; chmod 600 localhost.crt; chown root:root localhost.crt
+  template: src="templates/etc/pki/tls/private/localhost.key" dest="/etc/pki/tls/private/" mode=600 owner=root group=root force=no
+
 ### conf ###
 - name: cd /etc/nginx; cp /vagrant/ansible/roles/nginx/templates/etc/nginx/nginx.conf ./; chmod 644 nginx.conf; chown root:root nginx.conf
   template: src="templates/etc/nginx/nginx.conf" dest="/etc/nginx/" mode=644 owner=root group=root backup=yes

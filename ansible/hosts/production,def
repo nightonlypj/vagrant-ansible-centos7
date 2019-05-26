@@ -33,7 +33,9 @@ aliases_warning=admin@mydomain
 aliases_critical=admin@mydomain
 ### chronyd ###
 # Use CentOS default
-chronyd_servers='["0.centos.pool.ntp.org", "1.centos.pool.ntp.org", "2.centos.pool.ntp.org", "3.centos.pool.ntp.org"]'
+#chronyd_servers='["0.centos.pool.ntp.org", "1.centos.pool.ntp.org", "2.centos.pool.ntp.org", "3.centos.pool.ntp.org"]'
+# Use Amazon Linux
+chronyd_servers='["0.amazon.pool.ntp.org", "1.amazon.pool.ntp.org", "2.amazon.pool.ntp.org", "3.amazon.pool.ntp.org"]'
 ### END ###
 
 [db-servers:vars]

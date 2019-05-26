@@ -23,25 +23,35 @@
 ### systemctl ###
 - name: systemctl stop abrt-ccpp; systemctl disable abrt-ccpp
   systemd: name=abrt-ccpp state=stopped enabled=no
+  ignore_errors: yes
 - name: systemctl stop abrt-oops; systemctl disable abrt-oops
   systemd: name=abrt-oops state=stopped enabled=no
+  ignore_errors: yes
 - name: systemctl stop abrtd; systemctl disable abrtd
   systemd: name=abrtd state=stopped enabled=no
+  ignore_errors: yes
 - name: systemctl stop atd; systemctl disable atd
   systemd: name=atd state=stopped enabled=no
+  ignore_errors: yes
 - name: systemctl stop auditd; systemctl disable auditd
   systemd: name=auditd enabled=no
   # Tips: state=stopped -> Unable to stop service auditd: Failed to stop auditd.service: Operation refused, unit auditd.service may be requested by dependency only.
+  ignore_errors: yes
 - name: systemctl stop blk-availability; systemctl disable blk-availability
   systemd: name=blk-availability state=stopped enabled=no
+  ignore_errors: yes
 - name: systemctl stop lvm2-monitor; systemctl disable lvm2-monitor
   systemd: name=lvm2-monitor state=stopped enabled=no
+  ignore_errors: yes
 - name: systemctl stop mdmonitor; systemctl disable mdmonitor
   systemd: name=mdmonitor state=stopped enabled=no
+  ignore_errors: yes
 - name: systemctl stop ntpdate; systemctl disable ntpdate
   systemd: name=ntpdate state=stopped enabled=no
+  ignore_errors: yes
 - name: systemctl stop smartd; systemctl disable smartd
   systemd: name=smartd state=stopped enabled=no
+  ignore_errors: yes
 
 - name: systemctl start crond; systemctl enable crond
   systemd: name=crond state=started enabled=yes

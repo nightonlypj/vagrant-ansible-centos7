@@ -1,6 +1,7 @@
 ### yum ###
 - import_tasks: repos.yml
-- name: yum -y --enablerepo=pgdg96 install postgresql96 postgresql96-server postgresql96-devel postgresql96-contrib python-psycopg2
+- when: ansible_distribution == 'CentOS'
+  name: (CentOS) yum -y --enablerepo=pgdg96 install postgresql96 postgresql96-server postgresql96-devel postgresql96-contrib python-psycopg2
   yum: name={{ item }} state=present enablerepo=pgdg96
   with_items:
     - postgresql96
@@ -8,9 +9,39 @@
     - postgresql96-devel
     - postgresql96-contrib
     - python-psycopg2
+- when: ansible_distribution == 'Amazon'
+  name: (Amazon) amazon-linux-extras enable postgresql9.6
+  shell: amazon-linux-extras enable postgresql9.6
+- when: ansible_distribution == 'Amazon'
+  name: (Amazon) yum -y install postgresql postgresql-server postgresql-devel postgresql-contrib python-psycopg2
+  yum: name={{ item }} state=present
+  with_items:
+    - postgresql
+    - postgresql-server
+    - postgresql-devel
+    - postgresql-contrib
+    - python-psycopg2
 
-- name: ln -sfn /usr/pgsql-9.6/bin/pg_config /usr/bin/pg_config
+- when: ansible_distribution == 'CentOS'
+  name: (CentOS) ln -sfn /usr/pgsql-9.6/bin/pg_config /usr/bin/pg_config
   file: src="/usr/pgsql-9.6/bin/pg_config" dest="/usr/bin/pg_config" state=link force=yes
+
+### Amazon to CentOS ###
+- when: ansible_distribution == 'Amazon'
+  name: (Amazon) cd /var/lib/pgsql; mkdir -p 9.6; chmod 700 9.6; chown postgres:postgres 9.6
+  file: path="/var/lib/pgsql/9.6" state=directory mode=700 owner=postgres group=postgres
+- when: ansible_distribution == 'Amazon'
+  name: (Amazon) ln -sfn /var/lib/pgsql/data /var/lib/pgsql/9.6/data
+  file: src="/var/lib/pgsql/data" dest="/var/lib/pgsql/9.6/data" state=link force=yes
+- when: ansible_distribution == 'Amazon'
+  name: (Amazon) cd /usr; mkdir -p pgsql-9.6/bin; chmod 700 pgsql-9.6/{..,bin}; chown postgres:postgres pgsql-9.6/{..,bin}
+  file: path="/usr/pgsql-9.6/bin" state=directory mode=700 owner=postgres group=postgres
+- when: ansible_distribution == 'Amazon'
+  name: (Amazon) ln -sfn /usr/bin/postgresql-setup /usr/pgsql-9.6/bin/postgresql96-setup
+  file: src="/usr/bin/postgresql-setup" dest="/usr/pgsql-9.6/bin/postgresql96-setup" state=link force=yes
+- when: ansible_distribution == 'Amazon'
+  name: (Amazon) ln -sfn /usr/lib/systemd/system/postgresql.service /usr/lib/systemd/system/postgresql-9.6.service
+  file: src="/usr/lib/systemd/system/postgresql.service" dest="/usr/lib/systemd/system/postgresql-9.6.service" state=link force=yes
 
 ### init ###
 - name: test ! -e /var/lib/pgsql/9.6/data/postgresql.conf

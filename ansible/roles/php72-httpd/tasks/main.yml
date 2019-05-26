@@ -1,6 +1,8 @@
 ### yum ###
-- import_tasks: roles/common/tasks/remi.yml
-- name: yum -y --enablerepo=remi-php72,remi-safe,epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pecl-mcrypt php-pdo php-pear php-xml php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
+- when: ansible_distribution == 'CentOS'
+  import_tasks: roles/common/tasks/remi.yml
+- when: ansible_distribution == 'CentOS'
+  name: (CentOS) yum -y --enablerepo=remi-php72,remi-safe,epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pdo php-pear php-xml php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
   yum: name={{ item }} state=present enablerepo=remi-php72,remi-safe,epel
   with_items:
     - php
@@ -9,7 +11,33 @@
     - php-gmp
     - php-intl
     - php-mbstring
-    - php-pecl-mcrypt
+    - php-pdo
+    - php-pear
+    - php-xml
+    # Use ImageMagick
+    - php-pecl-imagick
+    # Use MariaDB or MySQL
+    - php-mysqlnd
+    # Use PostgreSQL
+    - php-pgsql
+    # Use Redis
+    - php-pecl-redis
+    # Use MongoDB
+    - php-mongodb
+  notify: systemctl restart httpd
+- when: ansible_distribution == 'Amazon'
+  name: (Amazon) amazon-linux-extras enable php7.2
+  shell: amazon-linux-extras enable php7.2
+- when: ansible_distribution == 'Amazon'
+  name: (Amazon) yum -y --enablerepo=epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pdo php-pear php-xml php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
+  yum: name={{ item }} state=present enablerepo=remi-php72,remi-safe,epel
+  with_items:
+    - php
+    - php-devel
+    - php-gd
+    - php-gmp
+    - php-intl
+    - php-mbstring
     - php-pdo
     - php-pear
     - php-xml

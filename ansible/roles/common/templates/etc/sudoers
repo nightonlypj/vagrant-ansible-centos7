@@ -62,6 +62,11 @@ Defaults   !visiblepw
 # env_reset is disabled or HOME is present in the env_keep list.
 #
 Defaults    always_set_home
+{% if ansible_distribution == 'Amazon' %}
+### START ###
+#Defaults    match_group_by_gid
+### END ###
+{% endif %}
 
 Defaults    env_reset
 Defaults    env_keep =  "COLORS DISPLAY HOSTNAME HISTSIZE KDEDIR LS_COLORS"

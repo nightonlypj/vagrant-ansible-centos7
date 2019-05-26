@@ -1,4 +1,8 @@
+{% if ansible_distribution == 'Amazon' %}
+#	$OpenBSD: sshd_config,v 1.100 2016/08/15 12:32:04 naddy Exp $
+{% else %}
 #	$OpenBSD: sshd_config,v 1.93 2014/01/10 05:59:19 djm Exp $
+{% endif %}
 
 # This is the sshd server system-wide configuration file.  See
 # sshd_config(5) for more information.
@@ -24,29 +28,37 @@ Port {{ ansible_ssh_port }}
 #ListenAddress 0.0.0.0
 #ListenAddress ::
 
+{% if ansible_distribution == 'CentOS' %}
 # The default requires explicit activation of protocol 1
 #Protocol 2
+{% endif %}
 ### START ###
 Protocol 2
 ### END ###
 
+{% if ansible_distribution == 'CentOS' %}
 # HostKey for protocol version 1
 #HostKey /etc/ssh/ssh_host_key
 # HostKeys for protocol version 2
+{% endif %}
 HostKey /etc/ssh/ssh_host_rsa_key
 #HostKey /etc/ssh/ssh_host_dsa_key
 HostKey /etc/ssh/ssh_host_ecdsa_key
 HostKey /etc/ssh/ssh_host_ed25519_key
+{% if ansible_distribution == 'CentOS' %}
 
 # Lifetime and size of ephemeral version 1 server key
 #KeyRegenerationInterval 1h
 #ServerKeyBits 1024
+{% endif %}
 
 # Ciphers and keying
 #RekeyLimit default none
 
 # Logging
+{% if ansible_distribution == 'CentOS' %}
 # obsoletes QuietMode and FascistLogging
+{% endif %}
 #SyslogFacility AUTH
 SyslogFacility AUTHPRIV
 #LogLevel INFO
@@ -68,7 +80,9 @@ MaxAuthTries 3
 ### END ###
 #MaxSessions 10
 
+{% if ansible_distribution == 'CentOS' %}
 #RSAAuthentication yes
+{% endif %}
 #PubkeyAuthentication yes
 
 # The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
@@ -81,11 +95,17 @@ AuthorizedKeysFile	.ssh/authorized_keys
 #AuthorizedKeysCommandUser nobody
 
 # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
+{% if ansible_distribution == 'CentOS' %}
 #RhostsRSAAuthentication no
 # similar for protocol version 2
+{% endif %}
 #HostbasedAuthentication no
 # Change to yes if you don't trust ~/.ssh/known_hosts for
+{% if ansible_distribution == 'Amazon' %}
+# HostbasedAuthentication
+{% else %}
 # RhostsRSAAuthentication and HostbasedAuthentication
+{% endif %}
 #IgnoreUserKnownHosts no
 # Don't read the user's ~/.rhosts and ~/.shosts files
 #IgnoreRhosts yes
@@ -93,7 +113,14 @@ AuthorizedKeysFile	.ssh/authorized_keys
 # To disable tunneled clear text passwords, change to no here!
 #PasswordAuthentication yes
 #PermitEmptyPasswords no
+{% if ansible_distribution == 'Amazon' %}
+### START ###
+#PasswordAuthentication no
+{% endif %}
 PasswordAuthentication yes
+{% if ansible_distribution == 'Amazon' %}
+### END ###
+{% endif %}
 
 # Change to no to disable s/key passwords
 #ChallengeResponseAuthentication yes
@@ -137,7 +164,14 @@ X11Forwarding yes
 #PrintLastLog yes
 #TCPKeepAlive yes
 #UseLogin no
+{% if ansible_distribution == 'Amazon' %}
+#UsePrivilegeSeparation sandbox
+### START ###
+{% endif %}
 UsePrivilegeSeparation sandbox		# Default for new installations.
+{% if ansible_distribution == 'Amazon' %}
+### END ###
+{% endif %}
 #PermitUserEnvironment no
 #Compression delayed
 #ClientAliveInterval 0

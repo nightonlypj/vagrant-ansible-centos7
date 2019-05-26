@@ -12,6 +12,14 @@
     - httpd-devel
     - mod_ssl
 
+### ssl ###
+- when: ansible_distribution == 'Amazon'
+  name: (Amazon) cd /etc/pki/tls/certs; cp /vagrant/ansible/roles/httpd/templates/etc/pki/tls/certs/localhost.crt ./; chmod 600 localhost.crt; chown root:root localhost.crt
+  template: src="templates/etc/pki/tls/certs/localhost.crt" dest="/etc/pki/tls/certs/" mode=600 owner=root group=root force=no
+- when: ansible_distribution == 'Amazon'
+  name: (Amazon) cd /etc/pki/tls/private; cp /vagrant/ansible/roles/httpd/templates/etc/pki/tls/private/localhost.key ./; chmod 600 localhost.crt; chown root:root localhost.crt
+  template: src="templates/etc/pki/tls/private/localhost.key" dest="/etc/pki/tls/private/" mode=600 owner=root group=root force=no
+
 ### conf ###
 - name: cd /etc/httpd/conf; cp /vagrant/ansible/roles/httpd/templates/etc/httpd/conf/{.ht*,*} ./; chmod 644 {.ht*,*}; chown root:root {.ht*,*}
   template: src={{ item }} dest="/etc/httpd/conf/" mode=644 owner=root group=root backup=yes
