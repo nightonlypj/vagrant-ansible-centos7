@@ -2,8 +2,8 @@
 - when: ansible_distribution == 'CentOS'
   import_tasks: roles/common/tasks/remi.yml
 - when: ansible_distribution == 'CentOS'
-  name: (CentOS) yum -y --enablerepo=remi-php72,remi-safe,epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pdo php-pear php-xml php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
-  yum: name={{ item }} state=present enablerepo=remi-php72,remi-safe,epel
+  name: (CentOS) yum -y --enablerepo=remi-php73,remi-safe,epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pdo php-pear php-xml php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
+  yum: name={{ item }} state=present enablerepo=remi-php73,remi-safe,epel
   with_items:
     - php
     - php-devel
@@ -26,8 +26,8 @@
     - php-mongodb
   notify: systemctl restart httpd
 - when: ansible_distribution == 'Amazon'
-  name: (Amazon) amazon-linux-extras enable php7.2
-  shell: amazon-linux-extras enable php7.2
+  name: (Amazon) amazon-linux-extras enable php7.3
+  shell: amazon-linux-extras enable php7.3
 - when: ansible_distribution == 'Amazon'
   name: (Amazon) yum -y --enablerepo=epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pdo php-pear php-xml php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
   yum: name={{ item }} state=present enablerepo=epel
@@ -48,9 +48,9 @@
     # Use PostgreSQL
     - php-pgsql
     # Use Redis
-    - php-pecl-redis
+#    - php-pecl-redis
     # Use MongoDB
-    - php-mongodb
+#    - php-mongodb
   notify: systemctl restart httpd
 
 ### html ###  *** Tips: What you set with Apache will return when installing PHP
@@ -58,10 +58,10 @@
   file: path="/var/www/html" state=directory mode=771 owner=apache group=wheel
 
 ### conf ###
-- name: cd /etc; cp /vagrant/ansible/roles/php72-httpd/templates/etc/php.ini ./; chmod 644 php.ini; chown root:root php.ini
+- name: cd /etc; cp /vagrant/ansible/roles/php73-httpd/templates/etc/php.ini ./; chmod 644 php.ini; chown root:root php.ini
   template: src="templates/etc/php.ini" dest="/etc/" mode=644 owner=root group=root backup=yes
   notify: systemctl restart httpd
-- name: cd /etc/php.d; cp /vagrant/ansible/roles/php72-httpd/templates/etc/php.d/* ./; chmod 644 *; chown root:root *
+- name: cd /etc/php.d; cp /vagrant/ansible/roles/php73-httpd/templates/etc/php.d/* ./; chmod 644 *; chown root:root *
   template: src={{ item }} dest="/etc/php.d/" mode=644 owner=root group=root backup=yes
   with_fileglob:
     - "templates/etc/php.d/*"

@@ -22,6 +22,9 @@
     # Use MariaDB(MySQL derived)
     - role: mariadb
       tags: mariadb
+    # Use MySQL 5.6
+#    - role: mysql56
+#      tags: mysql56
     # Use MySQL 5.7
 #    - role: mysql57
 #      tags: mysql57
@@ -60,9 +63,12 @@
     # Use PHP for Apache  *** Tips: It is better to delete unnecessary [ImageMagick,MariaDB/MySQL,PostgreSQL,Redis,MongoDB] from [roles/php-httpd/tasks/main.yml]
     - role: php-httpd
       tags: php-httpd
-    # Use PHP 7.2 for Apache  *** Tips: It is better to delete unnecessary [ImageMagick,MariaDB/MySQL,PostgreSQL,Redis,MongoDB] from [roles/php-httpd/tasks/main.yml]
+    # Use PHP 7.2 for Apache  *** Tips: It is better to delete unnecessary [ImageMagick,MariaDB/MySQL,PostgreSQL,Redis,MongoDB] from [roles/php72-httpd/tasks/main.yml]
 #    - role: php72-httpd
 #      tags: php72-httpd
+    # Use PHP 7.3 for Apache  *** Tips: It is better to delete unnecessary [ImageMagick,MariaDB/MySQL,PostgreSQL,Redis,MongoDB] from [roles/php73-httpd/tasks/main.yml]
+#    - role: php73-httpd
+#      tags: php73-httpd
    # Use Nginx
 #    - role: nginx
 #      tags: nginx
@@ -72,3 +78,7 @@
     # Use PHP 7.2 for Nginx  *** Tips: It is better to delete unnecessary [ImageMagick,MariaDB/MySQL,PostgreSQL,Redis,MongoDB] from [roles/php72-nginx/tasks/main.yml]
 #    - role: php72-nginx
 #      tags: php72-nginx
+    # Use PHP 7.3 for Nginx  *** Tips: It is better to delete unnecessary [ImageMagick,MariaDB/MySQL,PostgreSQL,Redis,MongoDB] from [roles/php73-nginx/tasks/main.yml]
+    # TODO: (Amazon) Error php-pecl-redis, php-mongodb
+#    - role: php73-nginx
+#      tags: php73-nginx
