@@ -16,7 +16,7 @@ httpd: {{ hosts_allow_httpd }}
 {% if hosts_allow_mysqld != '' %}
 mysqld: {{ hosts_allow_mysqld }}
 {% endif %}
-{% if hosts_allow_postgresql != 0 %}
+{% if hosts_allow_postgresql != '' %}
 postgresql: {{ hosts_allow_postgresql }}
 {% endif %}
 ### END ###
