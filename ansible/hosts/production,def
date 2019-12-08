@@ -41,25 +41,31 @@ chronyd_servers='["0.amazon.pool.ntp.org", "1.amazon.pool.ntp.org", "2.amazon.po
 [db-servers:vars]
 hosts_allow_httpd=
 hosts_allow_mysqld=127.0.0.1, 10.0.0.0/255.0.0.0, 172.16.0.0/255.240.0.0, 192.168.0.0/255.255.0.0, [::1], [fe80::]/10
-hosts_allow_postgresql=127.0.0.1, 10.0.0.0/255.0.0.0, 172.16.0.0/255.240.0.0, 192.168.0.0/255.255.0.0, [::1], [fe80::]/10
+#hosts_allow_postgresql=127.0.0.1, 10.0.0.0/255.0.0.0, 172.16.0.0/255.240.0.0, 192.168.0.0/255.255.0.0, [::1], [fe80::]/10
+hosts_allow_postgresql=
 firewalld_internal_addresses='["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fe80::/10"]'
 firewalld_enable_http_public=0
 firewalld_enable_tomcat_internal=0
 firewalld_enable_mysqld_internal=1
-firewalld_enable_postgresql_internal=1
-firewalld_enable_redis_internal=1
-firewalld_enable_mongodb_internal=1
+#firewalld_enable_postgresql_internal=1
+firewalld_enable_postgresql_internal=0
+#firewalld_enable_redis_internal=1
+firewalld_enable_redis_internal=0
+#firewalld_enable_mongodb_internal=1
+firewalld_enable_mongodb_internal=0
 ### MySQL/MariaDB ###
 mysql_root_password=changepasswd
-mysql_dbname=mytest
-mysql_username=myuser
+#mysql_dbname=mytest
+mysql_dbname=wordpress
+#mysql_username=myuser
+mysql_username=wordpress
 mysql_password=changepasswd
-mysql_validate_password_policy=LOW
-mysql_validate_password_length=6
+#mysql_validate_password_policy=LOW
+#mysql_validate_password_length=6
 ### PostgreSQL ###
-postgresql_dbname=pgtest
-postgresql_username=pguser
-postgresql_password=changepasswd
+#postgresql_dbname=pgtest
+#postgresql_username=pguser
+#postgresql_password=changepasswd
 ### END ###
 
 [web-servers:vars]
@@ -74,9 +80,9 @@ firewalld_enable_postgresql_internal=0
 firewalld_enable_redis_internal=0
 firewalld_enable_mongodb_internal=0
 ### Tomcat ###
-tomcat_enable_manager=0
-tomcat_user_name=
-tomcat_user_password=
+#tomcat_enable_manager=0
+#tomcat_user_name=
+#tomcat_user_password=
 ### Apache/Nginx ###
 nginx_enable_php=1
 httpd_front_servername=mydomain

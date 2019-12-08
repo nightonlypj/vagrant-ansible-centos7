@@ -14,14 +14,19 @@ hosts_env=development
 hosts_allow_sshd=127.0.0.1, 10.0.0.0/255.0.0.0, 172.16.0.0/255.240.0.0, 192.168.0.0/255.255.0.0, [::1], [fe80::]/10
 hosts_allow_httpd=ALL
 hosts_allow_mysqld={{ hosts_allow_sshd }}
-hosts_allow_postgresql={{ hosts_allow_sshd }}
+#hosts_allow_postgresql={{ hosts_allow_sshd }}
+hosts_allow_postgresql=
 firewalld_internal_addresses='["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fe80::/10"]'
 firewalld_enable_http_public=1
-firewalld_enable_tomcat_internal=1
+#firewalld_enable_tomcat_internal=1
+firewalld_enable_tomcat_internal=0
 firewalld_enable_mysqld_internal=1
-firewalld_enable_postgresql_internal=1
-firewalld_enable_redis_internal=1
-firewalld_enable_mongodb_internal=1
+#firewalld_enable_postgresql_internal=1
+firewalld_enable_postgresql_internal=0
+#firewalld_enable_redis_internal=1
+firewalld_enable_redis_internal=0
+#firewalld_enable_mongodb_internal=1
+firewalld_enable_mongodb_internal=0
 ### system ###
 localtime=Japan
 vconsole_keymap=jp106
@@ -40,22 +45,24 @@ chronyd_servers='["0.centos.pool.ntp.org", "1.centos.pool.ntp.org", "2.centos.po
 [db-servers:vars]
 ### MySQL/MariaDB ###
 mysql_root_password=xyz789
-mysql_dbname=mytest
-mysql_username=myuser
+#mysql_dbname=mytest
+mysql_dbname=wordpress
+#mysql_username=myuser
+mysql_username=wordpress
 mysql_password=abc123
-mysql_validate_password_policy=LOW
-mysql_validate_password_length=6
+#mysql_validate_password_policy=LOW
+#mysql_validate_password_length=6
 ### PostgreSQL ###
-postgresql_dbname=pgtest
-postgresql_username=pguser
-postgresql_password=abc123
+#postgresql_dbname=pgtest
+#postgresql_username=pguser
+#postgresql_password=abc123
 ### END ###
 
 [web-servers:vars]
 ### Tomcat ###
-tomcat_enable_manager=1
-tomcat_user_name=admin
-tomcat_user_password=xyz789
+#tomcat_enable_manager=1
+#tomcat_user_name=admin
+#tomcat_user_password=xyz789
 ### Apache/Nginx ###
 nginx_enable_php=1
 httpd_front_servername=dev-centos6.local
