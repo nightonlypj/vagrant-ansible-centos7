@@ -73,12 +73,12 @@
     - role: nginx
       tags: nginx
     # Use PHP for Nginx  *** Tips: It is better to delete unnecessary [ImageMagick,MariaDB/MySQL,PostgreSQL,Redis,MongoDB] from [roles/php-nginx/tasks/main.yml]
-    - role: php-nginx
-      tags: php-nginx
+#    - role: php-nginx
+#      tags: php-nginx
     # Use PHP 7.2 for Nginx  *** Tips: It is better to delete unnecessary [ImageMagick,MariaDB/MySQL,PostgreSQL,Redis,MongoDB] from [roles/php72-nginx/tasks/main.yml]
 #    - role: php72-nginx
 #      tags: php72-nginx
     # Use PHP 7.3 for Nginx  *** Tips: It is better to delete unnecessary [ImageMagick,MariaDB/MySQL,PostgreSQL,Redis,MongoDB] from [roles/php73-nginx/tasks/main.yml]
     # TODO: (Amazon) Error php-pecl-redis, php-mongodb
-#    - role: php73-nginx
-#      tags: php73-nginx
+    - role: php73-nginx
+      tags: php73-nginx

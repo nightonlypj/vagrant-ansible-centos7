@@ -1,7 +1,6 @@
 ### yum ###
 - import_tasks: roles/common/tasks/epel.yml
-#- name: yum -y --enablerepo=epel install php php-devel php-gd php-gmp php-intl php-mbstring php-mcrypt php-pdo php-pear php-xml php-fpm php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
-- name: yum -y --enablerepo=epel install php php-devel php-gd php-gmp php-intl php-mbstring php-mcrypt php-pdo php-pear php-xml php-fpm php-pecl-imagick php-mysqlnd
+- name: yum -y --enablerepo=epel install php php-devel php-gd php-gmp php-intl php-mbstring php-mcrypt php-pdo php-pear php-xml php-fpm php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
   yum: name={{ item }} state=present enablerepo=epel
   with_items:
     - php
@@ -20,11 +19,11 @@
     # Use MariaDB or MySQL
     - php-mysqlnd
     # Use PostgreSQL
-#    - php-pgsql
+    - php-pgsql
     # Use Redis
-#    - php-pecl-redis
+    - php-pecl-redis
     # Use MongoDB
-#    - php-mongodb
+    - php-mongodb
   notify: systemctl restart php-fpm
 
 ### conf ###

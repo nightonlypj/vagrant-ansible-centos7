@@ -2,7 +2,8 @@
 - when: ansible_distribution == 'CentOS'
   import_tasks: roles/common/tasks/remi.yml
 - when: ansible_distribution == 'CentOS'
-  name: (CentOS) yum -y --enablerepo=remi-php73,remi-safe,epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pdo php-pear php-xml php-fpm php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
+#  name: (CentOS) yum -y --enablerepo=remi-php73,remi-safe,epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pdo php-pear php-xml php-fpm php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
+  name: (CentOS) yum -y --enablerepo=remi-php73,remi-safe,epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pdo php-pear php-xml php-fpm php-pecl-imagick php-mysqlnd
   yum: name={{ item }} state=present enablerepo=remi-php73,remi-safe,epel
   with_items:
     - php
@@ -20,7 +21,7 @@
     # Use MariaDB or MySQL
     - php-mysqlnd
     # Use PostgreSQL
-    - php-pgsql
+#    - php-pgsql
     # Use Redis
 # TODO: (Amazon) Error php-pecl-redis
 #    - php-pecl-redis
@@ -32,7 +33,8 @@
   name: (Amazon) amazon-linux-extras enable php7.3
   shell: amazon-linux-extras enable php7.3
 - when: ansible_distribution == 'Amazon'
-  name: (Amazon) yum -y --enablerepo=epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pdo php-pear php-xml php-fpm php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
+#  name: (Amazon) yum -y --enablerepo=epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pdo php-pear php-xml php-fpm php-pecl-imagick php-mysqlnd php-pgsql php-pecl-redis php-mongodb
+  name: (Amazon) yum -y --enablerepo=epel install php php-devel php-gd php-gmp php-intl php-mbstring php-pdo php-pear php-xml php-fpm php-pecl-imagick php-mysqlnd
   yum: name={{ item }} state=present enablerepo=epel
   with_items:
     - php
@@ -50,7 +52,7 @@
     # Use MariaDB or MySQL
     - php-mysqlnd
     # Use PostgreSQL
-    - php-pgsql
+#    - php-pgsql
     # Use Redis
 # TODO: (Amazon) Error php-pecl-redis
 #    - php-pecl-redis

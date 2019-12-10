@@ -1,4 +1,4 @@
-# CentOS7 Vagrantfile＋Ansible playbook提供
+# CentOS7 Vagrantfile＋Ansible playbook提供（WordPress対応）
 
 Amazon Linux 2(EC2)対応  
 ※Amazon Linux(EC2/Lightsail)を使用する場合は、[CentOS6 Vagrantfile＋Ansible playbook提供](https://gitlab.com/nightonlypj/vagrant-ansible-centos6)を使用してください。
@@ -48,9 +48,9 @@ ansible
 （未使用）php72-httpd     ：PHP 7.2 for Apacheの設定
 （未使用）php73-httpd     ：PHP 7.3 for Apacheの設定
         nginx           ：Nginxの設定　※Load Balancer対応
-        php-nginx       ：PHP for Nginxの設定(PHP-FPM)
+（未使用）php-nginx       ：PHP for Nginxの設定(PHP-FPM)
 （未使用）php72-nginx     ：PHP 7.2 for Nginxの設定(PHP-FPM)
-（未使用）php73-nginx     ：PHP 7.3 for Nginxの設定(PHP-FPM)
+        php73-nginx     ：PHP 7.3 for Nginxの設定(PHP-FPM)
     ansible.cfg     ：Ansibleの設定ファイル
     playbook.yml    ：どの設定ルールを使うかを制御する設定　※使用しないルールはコメントアウトしてください
 README.md       ：説明や使い方（このファイル）
@@ -61,6 +61,20 @@ Vagrantfile,def ：Vagrantfileのサンプル（開発環境用）
 ## 初期設定
 
 Mac・Linuxターミナル(Windowsはエクスプローラー・エディタ等で操作)
+
+### WordPress設置
+
+下記からダウンロードして、/src/に設置＆/src/に解凍
+
+https://ja.wordpress.org/download/
+
+#### Tips: ソースをGit管理する場合
+
+`/.gitignore` の下記の行をコメントアウト
+
+> /src/wordpress-*.zip
+> /src/wordpress-*.tar.gz
+> /src/wordpress/
 
 ### Vagrantfile
 
@@ -130,6 +144,52 @@ $ su -
 # ansible-playbook playbook.yml -i hosts/development -l development
 ```
 ※特定の設定ルール(roles)のみ実行する場合はansible-playbookコマンドでtagsを指定する。例：`-t httpd,php-httpd`
+
+## WordPress設定(例)
+
+### hosts追加（設定例）
+
+> 192.168.12.207  dev-centos7.local
+
+### ブラウザでアクセスして設定
+
+https://dev-centos7.local/
+
+```
+WordPressへようこそ
+	[さあ、始めましょう！]
+データベース接続
+	データベース名: wordpress	<- ansible/hosts/developmentのmysql_dbname
+	ユーザー名: wordpress		<- ansible/hosts/developmentのmysql_username
+	パスワード: abc123			<- ansible/hosts/developmentのmysql_password
+	データベースのホスト名: localhost
+	テーブル接頭辞: wp_
+	[送信]
+この部分のインストールは無事完了
+	[インストール実行]
+必要情報
+	サイトのタイトル: （入力）
+	ユーザー名: （入力）
+	パスワード: （自動生成のをコピー or 入力）
+	メールアドレス: （入力）
+	検索エンジンでの表示: □検索エンジンがサイトをインデックスしないようにする
+	[WordPressをインストール]
+成功しました !
+```
+
+### Tips: WordPressマルチサイト設定
+
+src/wordpress/wp-config.php に下記を追加
+
+> define( 'WP_ALLOW_MULTISITE', true );
+
+WordPressサイトネットワークの作成
+
+> WordPress -> [ツール] -> [サイトネットワークの設置]
+
+src/wordpress/wp-config.php に上記で表示された内容を追加  
+※Nginxの設定変更は不要  
+※サブドメインの場合は、hostsに対象ドメインを追加
 
 ---
 
