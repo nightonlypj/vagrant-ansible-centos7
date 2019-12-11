@@ -1,7 +1,7 @@
 # CentOS7 Vagrantfile＋Ansible playbook提供（WordPress対応）
 
 Amazon Linux 2(EC2)対応  
-※Amazon Linux(EC2/Lightsail)を使用する場合は、[CentOS6 Vagrantfile＋Ansible playbook提供](https://gitlab.com/nightonlypj/vagrant-ansible-centos6)を使用してください。
+※Amazon Linux(EC2/Lightsail)を使用する場合は、[CentOS6 Vagrantfile＋Ansible playbook提供](https://dev.azure.com/nightonly/vagrant-ansible-origin/_git/vagrant-ansible-centos6)を使用してください。
 
 ## 前提条件
 
@@ -122,10 +122,12 @@ DNSで設定したホスト名を指定
 
 ## development使用方法(例)
 
+[CentOS7 Vagrant Box提供(VirtualBox向け)](https://dev.azure.com/nightonly/vagrant-ansible-origin/_git/vagrant-box-centos7)から最新のBoxをダウンロードしてください。
+
 Windowsコマンドプロンプト/Mac・Linuxターミナル  
-※最新のBoxのURLは、[CentOS7 Vagrant Box提供(VirtualBox向け)](https://gitlab.com/nightonlypj/vagrant-box-centos7)を参照してください。  
+※下記の`~/Downloads/CentOS7.3.1611.box`はダウンロードしたBoxのパスを指定してください。  
 ```
-$ vagrant box add CentOS7 https://gitlab.com/nightonlypj/vagrant-box-centos7/raw/master/CentOS7.3.1611.box
+$ vagrant box add CentOS7 ~/Downloads/CentOS7.3.1611.box
 $ vagrant plugin install vagrant-vbguest
 $ vagrant up
 $ vagrant vbguest
@@ -265,6 +267,8 @@ $ exit
 
 ### Let's Encrypt初期設定（各サーバー）[使用時のみ]
 
+#### シングルドメイン証明書の場合
+
 ※インターネットから http://[対象ドメイン]/.well-known/acme-challenge/ にアクセス出来る必要があります。（存在確認の為）
 
 各サーバーで実施（初回のみ）  
@@ -281,6 +285,70 @@ Is this ok [y/d/N]: y
 (Y)es/(N)o: y
 IMPORTANT NOTES:
  - Congratulations! Your certificate and chain have been saved at:
+# apachectl configtest
+Syntax OK
+# apachectl graceful
+```
+※更新(certbot-auto renew)はバッチ(/etc/cron.weekly/renew_letsencrypt.cron)で定期的に実行されます。
+
+※メール「Please Confirm Your EFF Subscription」が届きます -> URLをクリック
+
+#### マルチドメイン証明書の場合
+
+各サーバーで実施（初回のみ）  
+※下記のドメイン名・メールアドレスを変更して実行してください。  
+※複数のドメインを使用する場合は、certbot-autoの行を複数回実行してください。
+```
+# mv /etc/letsencrypt /etc/letsencrypt,`date +"%Y%m%d%H%M%S"`
+# cd /usr/bin
+# curl http://dl.eff.org/certbot-auto -o certbot-auto
+# chmod 755 certbot-auto
+# unset PYTHON_INSTALL_LAYOUT
+# certbot-auto certonly --manual -d test.mydomain -d *.test.mydomain --email admin@nightonly.com --agree-tos --manual-public-ip-logging-ok --preferred-challenges dns-01 --debug
+Is this ok [y/d/N]: y
+(Y)es/(N)o: y
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Please deploy a DNS TXT record under the name
+_acme-challenge.test.mydomain with the following value:
+
+＜〜〜〜 文字列1 〜〜〜＞
+
+Before continuing, verify the record is deployed.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+```
+
+表示されたTXTレコードをDNSサーバーに登録して、反映されてから[Enter]を押してください。  
+> $ nslookup -type=txt _acme-challenge.test.mydomain 8.8.8.8
+> _acme-challenge.test.mydomain	text = "＜〜〜〜 文字列1 〜〜〜＞"
+
+```
+Press Enter to Continue
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Please deploy a DNS TXT record under the name
+_acme-challenge.test.mydomain with the following value:
+
+＜〜〜〜 文字列2 〜〜〜＞
+
+Before continuing, verify the record is deployed.
+(This must be set up in addition to the previous challenges; do not remove,
+replace, or undo the previous challenge tasks yet. Note that you might be
+asked to create multiple distinct TXT records with the same name. This is
+permitted by DNS standards.)
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+```
+
+表示されたTXTレコードをDNSサーバーに`追加`登録して、反映されてから[Enter]を押してください。  
+> $ nslookup -type=txt _acme-challenge.test.mydomain 8.8.8.8
+> _acme-challenge.test.mydomain	text = "＜〜〜〜 文字列1 〜〜〜＞"
+> _acme-challenge.test.mydomain	text = "＜〜〜〜 文字列2 〜〜〜＞"
+
+```
+Press Enter to Continue
+
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at:
+
 # apachectl configtest
 Syntax OK
 # apachectl graceful

@@ -1,4 +1,4 @@
-{% if httpd_enable_ip_limit != 0 %}
+{% if front_access_control != 0 %}
 ### START ###
 Require local
 Require ip 10.0.0.0/8
