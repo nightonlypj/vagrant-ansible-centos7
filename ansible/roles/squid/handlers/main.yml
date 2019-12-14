@@ -1,0 +1,2 @@
+- name: systemctl restart squid
+  systemd: name=squid state=restarted

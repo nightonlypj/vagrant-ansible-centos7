@@ -9,5 +9,8 @@
   <service name="http"/>
   <service name="https"/>
 {% endif %}
+{% if firewalld_enable_squid_public != 0 %}
+  <service name="squid"/>
+{% endif %}
 <!-- ### END ### -->
 </zone>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ### START ### -->
+<service>
+  <short>Squid</short>
+  <description>Squid Proxy Server</description>
+  <port protocol="tcp" port="{{ squid_http_port }}"/>
+</service>
+<!-- ### END ### -->

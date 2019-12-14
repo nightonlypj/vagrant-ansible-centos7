@@ -51,6 +51,7 @@ ansible
         php-nginx       ：PHP for Nginxの設定(PHP-FPM)
         php72-nginx     ：PHP 7.2 for Nginxの設定(PHP-FPM)
         php73-nginx     ：PHP 7.3 for Nginxの設定(PHP-FPM)
+        squid           ：Squidの設定
     ansible.cfg     ：Ansibleの設定ファイル
     playbook.yml    ：どの設定ルールを使うかを制御する設定　※使用しないルールはコメントアウトしてください
 README.md       ：説明や使い方（このファイル）
