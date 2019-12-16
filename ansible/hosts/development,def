@@ -11,11 +11,11 @@ development
 ansible_ssh_port=22
 #ansible_ssh_user=ansible
 hosts_env=development
-hosts_allow_sshd=127.0.0.1, 10.0.0.0/255.0.0.0, 172.16.0.0/255.240.0.0, 192.168.0.0/255.255.0.0, [::1], [fe80::]/10
+hosts_allow_sshd=127.0.0.1, 10.0.0.0/255.0.0.0, 172.16.0.0/255.240.0.0, 192.168.0.0/255.255.0.0, [::1], [fc00::]/7, [fe80::]/10
 hosts_allow_httpd=ALL
 hosts_allow_mysqld={{ hosts_allow_sshd }}
 hosts_allow_postgresql={{ hosts_allow_sshd }}
-firewalld_internal_addresses='["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fe80::/10"]'
+firewalld_internal_addresses='["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fc00::/7", "fe80::/10"]'
 firewalld_enable_http_public=1
 firewalld_enable_tomcat_internal=1
 firewalld_enable_mysqld_internal=1
