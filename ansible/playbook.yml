@@ -82,3 +82,6 @@
     # TODO: (Amazon) Error php-pecl-redis, php-mongodb
     - role: php73-nginx
       tags: php73-nginx
+    # Use Squid
+#    - role: squid
+#      tags: squid

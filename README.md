@@ -51,6 +51,7 @@ ansible
 （未使用）php-nginx       ：PHP for Nginxの設定(PHP-FPM)
 （未使用）php72-nginx     ：PHP 7.2 for Nginxの設定(PHP-FPM)
         php73-nginx     ：PHP 7.3 for Nginxの設定(PHP-FPM)
+（未使用）squid           ：Squidの設定
     ansible.cfg     ：Ansibleの設定ファイル
     playbook.yml    ：どの設定ルールを使うかを制御する設定　※使用しないルールはコメントアウトしてください
 README.md       ：説明や使い方（このファイル）
@@ -285,10 +286,23 @@ Is this ok [y/d/N]: y
 (Y)es/(N)o: y
 IMPORTANT NOTES:
  - Congratulations! Your certificate and chain have been saved at:
+```
+
+Apacheの場合
+```
 # apachectl configtest
 Syntax OK
 # apachectl graceful
 ```
+
+Nginxの場合
+```
+# nginx -t -c /etc/nginx/nginx.conf
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+# systemctl restart nginx
+```
+
 ※更新(certbot-auto renew)はバッチ(/etc/cron.weekly/renew_letsencrypt.cron)で定期的に実行されます。
 
 ※メール「Please Confirm Your EFF Subscription」が届きます -> URLをクリック
@@ -348,11 +362,23 @@ Press Enter to Continue
 
 IMPORTANT NOTES:
  - Congratulations! Your certificate and chain have been saved at:
+```
 
+Apacheの場合
+```
 # apachectl configtest
 Syntax OK
 # apachectl graceful
 ```
+
+Nginxの場合
+```
+# nginx -t -c /etc/nginx/nginx.conf
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+# systemctl restart nginx
+```
+
 ※更新(certbot-auto renew)はバッチ(/etc/cron.weekly/renew_letsencrypt.cron)で定期的に実行されます。
 
 ※メール「Please Confirm Your EFF Subscription」が届きます -> URLをクリック

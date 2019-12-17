@@ -22,7 +22,7 @@ db-servers
 ansible_ssh_port=22
 #ansible_ssh_user=ansible
 hosts_env=production
-hosts_allow_sshd=x.x.x.x
+hosts_allow_sshd=x.x.x.x, 127.0.0.1, 10.0.0.0/255.0.0.0, 172.16.0.0/255.240.0.0, 192.168.0.0/255.255.0.0, [::1], [fc00::]/7, [fe80::]/10
 ### system ###
 localtime=Japan
 vconsole_keymap=jp106
@@ -40,10 +40,10 @@ chronyd_servers='["0.amazon.pool.ntp.org", "1.amazon.pool.ntp.org", "2.amazon.po
 
 [db-servers:vars]
 hosts_allow_httpd=
-hosts_allow_mysqld=127.0.0.1, 10.0.0.0/255.0.0.0, 172.16.0.0/255.240.0.0, 192.168.0.0/255.255.0.0, [::1], [fe80::]/10
-#hosts_allow_postgresql=127.0.0.1, 10.0.0.0/255.0.0.0, 172.16.0.0/255.240.0.0, 192.168.0.0/255.255.0.0, [::1], [fe80::]/10
+hosts_allow_mysqld=127.0.0.1, 10.0.0.0/255.0.0.0, 172.16.0.0/255.240.0.0, 192.168.0.0/255.255.0.0, [::1], [fc00::]/7, [fe80::]/10
+#hosts_allow_postgresql=127.0.0.1, 10.0.0.0/255.0.0.0, 172.16.0.0/255.240.0.0, 192.168.0.0/255.255.0.0, [::1], [fc00::]/7, [fe80::]/10
 hosts_allow_postgresql=
-firewalld_internal_addresses='["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fe80::/10"]'
+firewalld_internal_addresses='["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fc00::/7", "fe80::/10"]'
 firewalld_enable_http_public=0
 firewalld_enable_tomcat_internal=0
 firewalld_enable_mysqld_internal=1
@@ -53,6 +53,8 @@ firewalld_enable_postgresql_internal=0
 firewalld_enable_redis_internal=0
 #firewalld_enable_mongodb_internal=1
 firewalld_enable_mongodb_internal=0
+squid_http_port=
+firewalld_enable_squid_public=0
 ### MySQL/MariaDB ###
 mysql_root_password=changepasswd
 #mysql_dbname=mytest
@@ -72,13 +74,15 @@ mysql_password=changepasswd
 hosts_allow_httpd=ALL
 hosts_allow_mysqld=
 hosts_allow_postgresql=
-firewalld_internal_addresses='["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fe80::/10"]'
+firewalld_internal_addresses='[]'
 firewalld_enable_http_public=1
 firewalld_enable_tomcat_internal=0
 firewalld_enable_mysqld_internal=0
 firewalld_enable_postgresql_internal=0
 firewalld_enable_redis_internal=0
 firewalld_enable_mongodb_internal=0
+squid_http_port=3128
+firewalld_enable_squid_public=1
 ### Tomcat ###
 #tomcat_enable_manager=0
 #tomcat_user_name=
