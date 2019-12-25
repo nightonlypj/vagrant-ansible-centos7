@@ -1,2 +1,4 @@
+- name: systemctl restart rsyslog
+  systemd: name=rsyslog state=restarted
 - name: systemctl restart postfix
   systemd: name=postfix state=restarted
