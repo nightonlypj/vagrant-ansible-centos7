@@ -63,7 +63,7 @@
 #    host: "{{ item }}"
 #    password: "{{ mysql_root_password }}"
 #    login_user: root
-#    login_password: "{{ mysql_root_password }}" 
+#    login_password: "{{ mysql_root_password }}"
 #  with_items:
 #    - "{{ ansible_fqdn }}"
 #    - 127.0.0.1
@@ -84,7 +84,7 @@
 #    host_all: yes
 #    state: absent
 #    login_user: root
-#    login_password: "{{ mysql_root_password }}" 
+#    login_password: "{{ mysql_root_password }}"
   shell: mysql mysql -e "DELETE FROM user WHERE User = '';"
 # - TODO END -
 - name: mysql> DELETE FROM user WHERE User = 'root' AND Host = '{{ ansible_fqdn }}';
@@ -94,7 +94,7 @@
 #    host: "{{ ansible_fqdn }}"
 #    state: absent
 #    login_user: root
-#    login_password: "{{ mysql_root_password }}" 
+#    login_password: "{{ mysql_root_password }}"
   shell: mysql mysql -e "DELETE FROM user WHERE User = 'root' AND Host = '{{ ansible_fqdn }}';"
 # - TODO END -
 
@@ -104,14 +104,14 @@
     name: 'test'
     state: absent
     login_user: root
-    login_password: "{{ mysql_root_password }}" 
+    login_password: "{{ mysql_root_password }}"
 
 ### create database/user ###
 - name: mysql> CREATE DATABASE {{ mysql_dbname }};
   mysql_db:
     name: "{{ mysql_dbname }}"
     login_user: root
-    login_password: "{{ mysql_root_password }}" 
+    login_password: "{{ mysql_root_password }}"
 - name: mysql> CREATE USER '{{ mysql_username }}'@'%' IDENTIFIED BY '{{ mysql_password }}'; GRANT ALL PRIVILEGES ON {{ mysql_dbname }}.* TO '{{ mysql_username }}'@'%';
 # TODO: zlib.error: Error -2 while preparing to decompress data: inconsistent stream state
 #  mysql_user:
@@ -120,7 +120,27 @@
 #    password: "{{ mysql_password }}"
 #    priv: "{{ mysql_dbname }}.*:ALL"
 #    login_user: root
-#    login_password: "{{ mysql_root_password }}" 
+#    login_password: "{{ mysql_root_password }}"
   shell: mysql mysql -e "CREATE USER '{{ mysql_username }}'@'%' IDENTIFIED BY '{{ mysql_password }}'; GRANT ALL PRIVILEGES ON {{ mysql_dbname }}.* TO '{{ mysql_username }}'@'%';"
+  ignore_errors: yes
+# - TODO END -
+
+- when: mysql_test_dbname != ''
+  name: (test) mysql> CREATE DATABASE {{ mysql_test_dbname }};
+  mysql_db:
+    name: "{{ mysql_test_dbname }}"
+    login_user: root
+    login_password: "{{ mysql_root_password }}"
+- when: mysql_test_username != ''
+  name: (test) mysql> CREATE USER '{{ mysql_test_username }}'@'%' IDENTIFIED BY '{{ mysql_test_password }}'; GRANT ALL PRIVILEGES ON {{ mysql_test_dbname }}.* TO '{{ mysql_test_username }}'@'%';
+# TODO: zlib.error: Error -2 while preparing to decompress data: inconsistent stream state
+#  mysql_user:
+#    name: "{{ mysql_test_username }}"
+#    host: "%"
+#    password: "{{ mysql_test_password }}"
+#    priv: "{{ mysql_test_dbname }}.*:ALL"
+#    login_user: root
+#    login_password: "{{ mysql_root_password }}"
+  shell: mysql mysql -e "CREATE USER '{{ mysql_test_username }}'@'%' IDENTIFIED BY '{{ mysql_test_password }}'; GRANT ALL PRIVILEGES ON {{ mysql_test_dbname }}.* TO '{{ mysql_test_username }}'@'%';"
   ignore_errors: yes
 # - TODO END -
