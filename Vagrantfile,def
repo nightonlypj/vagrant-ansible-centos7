@@ -96,7 +96,8 @@ Vagrant.configure("2") do |config|
     echo "admin:abc123" | chpasswd
     echo "root:xyz789" | chpasswd
     # ansible
-    yum -y install ansible
+    yum -y install epel-release
+    yum -y --enablerepo=epel install ansible
     mkdir -p /vagrant/log
     mv /vagrant/log/ansible.log /vagrant/log/ansible.log,`date +"%Y%m%d%H%M%S"` > /dev/null 2>&1
     touch /vagrant/log/ansible.log

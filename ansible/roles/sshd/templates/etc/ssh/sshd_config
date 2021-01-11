@@ -113,14 +113,16 @@ AuthorizedKeysFile	.ssh/authorized_keys
 # To disable tunneled clear text passwords, change to no here!
 #PasswordAuthentication yes
 #PermitEmptyPasswords no
-{% if ansible_distribution == 'Amazon' %}
 ### START ###
+{% if ansible_distribution == 'Amazon' %}
 #PasswordAuthentication no
 {% endif %}
+{% if sshd_password_authentication == 'no' %}
+PasswordAuthentication no
+{% else %}
 PasswordAuthentication yes
-{% if ansible_distribution == 'Amazon' %}
-### END ###
 {% endif %}
+### END ###
 
 # Change to no to disable s/key passwords
 #ChallengeResponseAuthentication yes
