@@ -59,7 +59,7 @@ RELEASES.md     ：リリースノート
 Vagrantfile,def ：Vagrantfileのサンプル（開発環境用）
 ```
 
-## 初期設定
+## 環境構築手順
 
 Mac・Linuxターミナル(Windowsはエクスプローラー・エディタ等で操作)
 
@@ -191,6 +191,8 @@ v12.20.1
 
 ```
 $ cd rails-app-origin
+$ cp -a config/settings/development.yml,dev config/settings/development.yml
+
 $ bundle install
 $ rails webpacker:install
 Overwrite /mnt/rails-app-origin/config/webpacker.yml? (enter "h" for help) [Ynaqdhm] n
@@ -209,7 +211,11 @@ $ sudo vi /etc/hosts
 192.168.12.207   localhost.local customer1.localhost.local public1.localhost.local customer2.localhost.local
 ```
 
-- http://localhost.local  
+- http://localhost.local
+  - メールアドレスとパスワードは、`db/seed/development/users.yml`参照
+- http://localhost.local/admin
+  - メールアドレスとパスワードは、`db/seed/admin_users.yml`参照
+
 ※この接続ではプライバシーが保護されません [詳細設定] -> [localhost.local にアクセスする（安全ではありません）]
 
 ---
@@ -303,9 +309,9 @@ $ exit
 # unset PYTHON_INSTALL_LAYOUT
 
 Apacheの場合
-# certbot-auto certonly --webroot -w /var/www/html -d test.mydomain --email admin@mydomain --agree-tos --debug
+# certbot-auto certonly --webroot -w /var/www/html -d test.mydomain -d www.test.mydomain --email admin@mydomain --agree-tos --debug
 Nginxの場合
-# certbot-auto certonly --webroot -w /usr/share/nginx/html -d test.mydomain --email admin@mydomain --agree-tos --debug
+# certbot-auto certonly --webroot -w /usr/share/nginx/html -d test.mydomain -d www.test.mydomain --email admin@mydomain --agree-tos --debug
 
 Is this ok [y/d/N]: y
 (Y)es/(N)o: y
@@ -457,6 +463,16 @@ $ git branch
 * develop
   master
 
+$ mkdir -p tmp/{pids,sockets}
+$ cd config/settings
+本番> $ ln -s production.yml,prod production.yml
+ステージング> $ ln -s production.yml,stg production.yml
+テスト> $ ln -s production.yml,test production.yml
+$ cd ../../public
+本番> $ ln -s robots.txt,allow robots.txt
+その他> $ ln -s robots.txt,disallow robots.txt
+$ cd ..
+
 $ bundle install --without test development
 
 $ rails secret
@@ -479,16 +495,10 @@ Mysql2::Error: Specified key was too long; max key length is 767 bytes
 $ rails db:migrate:reset
 $ rails db:seed
 
-$ mkdir -p tmp/{pids,sockets}
-$ cd config/settings
-$ ln -s production.yml,test production.yml
-$ cd ../../public
-本番> $ ln -s robots.txt,allow robots.txt
-その他> $ ln -s robots.txt,disallow robots.txt
-$ cd ..
-
 $ rails assets:precompile
 $ rails unicorn:start
 ```
 
+- http://mydomain
+- http://stg.mydomain
 - http://test.mydomain
