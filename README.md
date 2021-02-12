@@ -159,21 +159,27 @@ $ su -
 ```
 ※特定の設定ルール(roles)のみ実行する場合はansible-playbookコマンドでtagsを指定する。例：`-t httpd,php-httpd`
 
-### Ruby/Node.jsインストール
+### Rubyインストール
 
 ```
 # su - rails-app
 $ gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+gpg:           インポート: 2  (RSA: 2)
+
 $ 'curl' -sSL https://get.rvm.io | bash -s stable
+Donate: https://opencollective.com/rvm/donate
+
 $ source ~/.rvm/scripts/rvm
 $ rvm -v
-rvm 1.29.11 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io]
+rvm 1.29.12 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io]
 ※バージョンは異なっても良い
 
-$ rvm install 2.6.3
+$ rvm install 3.0.0
 $ ruby -v
-ruby 2.6.3p62 (2019-04-16 revision 67580) [x86_64-linux]
+ruby 3.0.0p0 (2020-12-25 revision 95aff21468) [x86_64-linux]
 ```
+
+### Node.jsインストール
 
 ```
 $ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
@@ -181,10 +187,15 @@ $ source ~/.bashrc
 $ nvm --version
 0.33.11
 ※バージョンは異なっても良い
+```
+```
+$ nvm ls-remote | grep 'Latest LTS'
+       v14.15.5   (Latest LTS: Fermium)
+$ nvm install v14.15.5
+※バージョンは異なっても良いが、本番と同じが理想
 
-$ nvm install v12.20.1
 $ node -v
-v12.20.1
+v14.15.5
 ```
 
 ### Railsアプリ起動
@@ -194,12 +205,14 @@ $ cd rails-app-origin
 $ cp -a config/settings/development.yml,dev config/settings/development.yml
 
 $ bundle install
-$ rails webpacker:install
-Overwrite /mnt/rails-app-origin/config/webpacker.yml? (enter "h" for help) [Ynaqdhm] n
+Bundle complete!
+
+$ yarn
+Done
 
 $ rails db:migrate
-Mysql2::Error: Specified key was too long; max key length is 767 bytes
-$ rails db:migrate:reset
+※「Mysql2::Error: Specified key was too long; max key length is 767 bytes」の場合は「rails db:migrate:reset」で回避
+
 $ rails db:seed
 $ rails s
 ```
@@ -458,21 +471,27 @@ nginx: configuration file /etc/nginx/nginx.conf test is successful
 
 ## デプロイ（各サーバー）
 
-### Ruby/Node.jsインストール
+### Rubyインストール
 
 ```
 # su - rails-app
 $ gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB
+gpg:           インポート: 2  (RSA: 2)
+
 $ 'curl' -sSL https://get.rvm.io | bash -s stable
+Donate: https://opencollective.com/rvm/donate
+
 $ source ~/.rvm/scripts/rvm
 $ rvm -v
-rvm 1.29.11 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io]
+rvm 1.29.12 (latest) by Michal Papis, Piotr Kuczynski, Wayne E. Seguin [https://rvm.io]
 ※バージョンは異なっても良い
 
-$ rvm install 2.6.3
+$ rvm install 3.0.0
 $ ruby -v
-ruby 2.6.3p62 (2019-04-16 revision 67580) [x86_64-linux]
+ruby 3.0.0p0 (2020-12-25 revision 95aff21468) [x86_64-linux]
 ```
+
+### Node.jsインストール
 
 ```
 $ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
@@ -480,10 +499,13 @@ $ source ~/.bashrc
 $ nvm --version
 0.33.11
 ※バージョンは異なっても良い
+```
+```
+$ nvm install v14.15.5
+※バージョンは異なっても良いが、開発環境と同じが理想
 
-$ nvm install v12.20.1
 $ node -v
-v12.20.1
+v14.15.5
 ```
 
 ### Railsアプリ起動
@@ -514,9 +536,13 @@ $ cd ../../public
 $ cd ..
 
 $ bundle install --without test development
+Bundle complete!
+
+$ yarn
+Done
 
 $ rails secret
-※出力内容を下記に入れてメモ。環境毎に一意の値
+※出力内容を下記(SECRET_KEY_BASE)に入れてメモ。環境毎に一意の値
 $ vi ~/.bashrc
 ---- ここから ----
 ### START ###
@@ -527,14 +553,10 @@ export DATABASE_URL=mysql2://rails_app:changepasswd@localhost/rails_app_test
 ---- ここまで ----
 $ source ~/.bashrc
 
-$ rails webpacker:install
-Overwrite /mnt/rails-app-origin/config/webpacker.yml? (enter "h" for help) [Ynaqdhm] n
-
 $ rails db:migrate
-Mysql2::Error: Specified key was too long; max key length is 767 bytes
-$ rails db:migrate:reset
-$ rails db:seed
+※「Mysql2::Error: Specified key was too long; max key length is 767 bytes」の場合は「rails db:migrate:reset」で回避
 
+$ rails db:seed
 $ rails assets:precompile
 $ rails unicorn:start
 ```
