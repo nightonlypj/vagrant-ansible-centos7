@@ -17,8 +17,11 @@
     - telnet
 
 - import_tasks: roles/common/tasks/epel.yml
-- name: yum -y --enablerepo=epel install nkf
-  yum: name=nkf state=present enablerepo=epel
+- name: yum -y --enablerepo=epel install nkf jq
+  yum: name={{ item }} state=present enablerepo=epel
+  with_items:
+    - nkf
+    - jq
 
 ### systemctl ###
 - name: systemctl stop abrt-ccpp; systemctl disable abrt-ccpp
